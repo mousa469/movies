@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:movies/core/router/app_router.dart';
+import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/features/splash/presentation/views/splash_view.dart';
 import 'package:movies/generated/l10n.dart';
 
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
        localizationsDelegates: [
                 S.delegate,
                 GlobalMaterialLocalizations.delegate,
@@ -26,7 +28,9 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: AppRouter.onGenerateRoute,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        scaffoldBackgroundColor: AppColors.secondaryBlackColor,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple , brightness: Brightness.dark),
+        brightness: Brightness.dark,
         useMaterial3: true,
       ),
     );
