@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:movies/core/assets/app_assets.dart';
 import 'package:movies/core/extensions/media_query_extension.dart';
 import 'package:movies/core/extensions/routing_extension.dart';
+import 'package:movies/core/services/shared_prefs.dart';
+import 'package:movies/features/authentication/presentation/views/login_view.dart';
 import 'package:movies/features/on_boarding/presentation/views/on_boarding_view.dart';
 
 class SplashView extends StatefulWidget {
@@ -16,11 +18,8 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
-      context.pushReplacementNamed(OnBoardingView.id);
-    });
+    navigateTo();
   }
 
   @override
@@ -37,5 +36,17 @@ class _SplashViewState extends State<SplashView> {
         ),
       ),
     );
+  }
+
+  void navigateTo() async {
+    await Future.delayed(const Duration(seconds: 2));
+    bool seenBefore =
+        await SharedPrefs.getBool(SharedPrefs.isOnBoardingSeenBefore) ?? false;
+
+    if (seenBefore == true) {
+      context.pushReplacementNamed(LoginView.id);
+    } else {
+      context.pushReplacementNamed(OnBoardingView.id);
+    }
   }
 }

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-extension space on num {
-  Widget verticalSpace(double value) {
+extension space on int {
+  Widget verticalSpace() {
     return SizedBox(
-      height: value,
+      height: toDouble(),
     );
   }
 
-  Widget horizontalSpace(double value) {
+  Widget horizontalSpace() {
     return SizedBox(
-      width: value,
+      width: toDouble(),
     );
   }
 }
