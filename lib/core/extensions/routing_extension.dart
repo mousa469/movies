@@ -5,6 +5,9 @@ extension Navigation on BuildContext {
   void pushNamed(String routeName, {Object? arguments}) {
     Navigator.of(this).pushNamed(routeName, arguments: arguments);
   }
+  void pop() {
+    Navigator.pop(this);
+  }
 
   void pushReplacementNamed(String routeName, {Object? arguments}) {
     Navigator.of(this).pushReplacementNamed(routeName, arguments: arguments);

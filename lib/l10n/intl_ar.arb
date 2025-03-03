@@ -48,5 +48,13 @@
     "pick_avatar": "اختر صورة رمزية",
     "delete_account": "حذف الحساب",
     "update_data": "تحديث البيانات",
-    "or": "أو"
+    "or": "أو",
+    "email_address_is_required" : "البريد الالكتروني مطلوب",
+    "password_is_required" : "  كلمه السر مطلوبه",
+    "name_is_required" :  "الاسم مطلوب"  ,
+    "phone_number_is_required" : " رقم الهاتف مطلوب"
+
+
+
+
 }

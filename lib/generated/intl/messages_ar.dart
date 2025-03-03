@@ -47,6 +47,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "edit_profile": MessageLookupByLibrary.simpleMessage("تعديل الملف الشخصي"),
     "email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
+    "email_address_is_required": MessageLookupByLibrary.simpleMessage(
+      "البريد الالكتروني مطلوب",
+    ),
     "exit": MessageLookupByLibrary.simpleMessage("خروج"),
     "explore_all_genres": MessageLookupByLibrary.simpleMessage(
       "استكشف جميع الأنواع",
@@ -74,10 +77,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "تسجيل الدخول باستخدام جوجل",
     ),
     "name": MessageLookupByLibrary.simpleMessage("الاسم"),
+    "name_is_required": MessageLookupByLibrary.simpleMessage("الاسم مطلوب"),
     "next": MessageLookupByLibrary.simpleMessage("التالي"),
     "or": MessageLookupByLibrary.simpleMessage("أو"),
     "password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
+    "password_is_required": MessageLookupByLibrary.simpleMessage(
+      "  كلمه السر مطلوبه",
+    ),
     "phone_number": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
+    "phone_number_is_required": MessageLookupByLibrary.simpleMessage(
+      " رقم الهاتف مطلوب",
+    ),
     "pick_avatar": MessageLookupByLibrary.simpleMessage("اختر صورة رمزية"),
     "rate_review_learn": MessageLookupByLibrary.simpleMessage(
       "قيّم، راجع، وتعلم",

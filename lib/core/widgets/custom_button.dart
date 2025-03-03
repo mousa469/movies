@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:movies/core/theme/app_styles.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final Color? color;
-  final String? text;
+  final Widget? child;
   final VoidCallback? onPressed;
 
   const CustomElevatedButton({
     Key? key,
     this.color,
-    this.text,
+    this.child,
     this.onPressed,
   }) : super(key: key);
 
@@ -25,9 +24,7 @@ class CustomElevatedButton extends StatelessWidget {
           ),
         ),
         onPressed: onPressed ?? () {}, // Default empty function
-        child: Text(text ?? "Button", // Default text
-            style: AppStyles.textStyle20SemiBold // Default text style
-            ),
+        child: child,
       ),
     );
   }

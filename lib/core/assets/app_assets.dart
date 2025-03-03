@@ -2,6 +2,14 @@
 class Assets {
   Assets._();
   
+  /// Assets for iconsGoogleIconOrg
+  /// assets/icons/google_icon_org.png
+  static const String iconsGoogleIconOrg = "assets/icons/google_icon_org.png";
+
+  /// Assets for imagesForgotPassword
+  /// assets/images/Forgot_password.png
+  static const String imagesForgotPassword = "assets/images/Forgot_password.png";
+
   /// Assets for imagesMoviesLogo
   /// assets/images/movies_logo.png
   static const String imagesMoviesLogo = "assets/images/movies_logo.png";

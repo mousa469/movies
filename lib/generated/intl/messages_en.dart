@@ -47,6 +47,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "edit_profile": MessageLookupByLibrary.simpleMessage("Edit Profile"),
     "email": MessageLookupByLibrary.simpleMessage("Email"),
+    "email_address_is_required": MessageLookupByLibrary.simpleMessage(
+      "email address is required ",
+    ),
     "exit": MessageLookupByLibrary.simpleMessage("Exit"),
     "explore_all_genres": MessageLookupByLibrary.simpleMessage(
       "Explore All Genres",
@@ -74,10 +77,19 @@ class MessageLookup extends MessageLookupByLibrary {
       "Login With Google",
     ),
     "name": MessageLookupByLibrary.simpleMessage("Name"),
+    "name_is_required": MessageLookupByLibrary.simpleMessage(
+      "name is required",
+    ),
     "next": MessageLookupByLibrary.simpleMessage("Next"),
     "or": MessageLookupByLibrary.simpleMessage("OR"),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
+    "password_is_required": MessageLookupByLibrary.simpleMessage(
+      "password is required ",
+    ),
     "phone_number": MessageLookupByLibrary.simpleMessage("Phone Number"),
+    "phone_number_is_required": MessageLookupByLibrary.simpleMessage(
+      "phone number is required",
+    ),
     "pick_avatar": MessageLookupByLibrary.simpleMessage("Pick Avatar"),
     "rate_review_learn": MessageLookupByLibrary.simpleMessage(
       "Rate, Review, and Learn",

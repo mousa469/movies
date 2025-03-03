@@ -419,6 +419,46 @@ class S {
   String get or {
     return Intl.message('OR', name: 'or', desc: '', args: []);
   }
+
+  /// `email address is required `
+  String get email_address_is_required {
+    return Intl.message(
+      'email address is required ',
+      name: 'email_address_is_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `password is required `
+  String get password_is_required {
+    return Intl.message(
+      'password is required ',
+      name: 'password_is_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `name is required`
+  String get name_is_required {
+    return Intl.message(
+      'name is required',
+      name: 'name_is_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `phone number is required`
+  String get phone_number_is_required {
+    return Intl.message(
+      'phone number is required',
+      name: 'phone_number_is_required',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

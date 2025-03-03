@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movies/core/theme/app_colors.dart';
 
-
 class CustomTextField extends StatefulWidget {
   final TextEditingController? controller;
   final bool? isPassword;
@@ -71,9 +70,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+
     return TextFormField(
       onTapOutside: (event) {
-        FocusManager.instance.primaryFocus!.unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
       },
       textDirection: widget.textDirection,
       controller: widget.controller,
@@ -85,8 +85,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
       onFieldSubmitted: widget.onFieldSubmitted,
       onSaved: widget.onSaved,
       onTap: widget.onTap,
-      maxLines: widget.maxLines,
-      minLines: widget.minLines,
+      maxLines: widget.isPassword ?? false ? 1 : widget.maxLines,
+      minLines: widget.isPassword ?? false ? 1 : widget.minLines,
       maxLength: widget.maxLength,
       obscureText: widget.isPassword ?? false ? obscureText : false,
       obscuringCharacter: '*',
@@ -95,7 +95,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       enabled: widget.enabled,
       style: widget.textStyle ??
           theme.textTheme.bodyMedium?.copyWith(
-              color: const Color(0xFF222222), fontWeight: FontWeight.w500),
+              color: AppColors.whiteColor, fontWeight: FontWeight.w500),
       autovalidateMode: AutovalidateMode.onUserInteraction,
       textInputAction: widget.action ?? TextInputAction.done,
       focusNode: widget.focusNode,
@@ -123,7 +123,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
               )
             : widget.suffixWidget,
         prefixIcon: widget.prefixIcon,
-
         hintText: widget.hint,
         hintStyle: TextStyle(
           fontFamily: "Inter",
@@ -132,35 +131,34 @@ class _CustomTextFieldState extends State<CustomTextField> {
           fontWeight: FontWeight.w500,
         ),
         counterText: "",
-        fillColor: Colors.white,
+        fillColor: AppColors.primaryBlackColor,
         filled: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(
-            color:AppColors.kPrimaryColor,
+            color: Colors.transparent,
             width: 1,
           ),
         ),
-        // suffix: isPass widget.suffixWidget,
         contentPadding: widget.edgeInsets,
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(
-            color: AppColors.kPrimaryColor,
+            color: Colors.transparent,
             width: 1,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(
-            color: AppColors.kPrimaryColor,
+            color: Colors.transparent,
             width: 1,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(
-            color: AppColors.kPrimaryColor,
+            color: Colors.transparent,
             width: 1,
           ),
         ),
