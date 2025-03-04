@@ -3,10 +3,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedPrefs {
   static late SharedPreferences sharedPreferences;
   static const String isOnBoardingSeenBefore = "isOnBoardingSeenBefore";
+  static const String isRegisteredBefore = "isRegisteredBefore";
+  static const String userEmail = "userEmail";
+  static const String userName = "userName";
+  static const String userID = "userID";
 
-  /// Initialize SharedPreferences once
 
-  /// ✅ Add an async initialization method
   static Future<void> init() async {
     sharedPreferences = await SharedPreferences.getInstance();
   }
