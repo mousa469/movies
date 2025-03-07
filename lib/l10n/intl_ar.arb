@@ -52,7 +52,14 @@
     "email_address_is_required" : "البريد الالكتروني مطلوب",
     "password_is_required" : "  كلمه السر مطلوبه",
     "name_is_required" :  "الاسم مطلوب"  ,
-    "phone_number_is_required" : " رقم الهاتف مطلوب"
+    "phone_number_is_required" : " رقم الهاتف مطلوب",
+    "congratualtions":"مبارك",
+    "Opps":"انتبه",
+     "registered_successfully": "تم التسجيل بنجاح",
+  "sign_in_successfully": "تم تسجيل الدخول بنجاح"
+    
+
+
 
 
 

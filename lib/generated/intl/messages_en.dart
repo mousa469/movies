@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "Opps": MessageLookupByLibrary.simpleMessage("Opps"),
     "action": MessageLookupByLibrary.simpleMessage("Action"),
     "adventure": MessageLookupByLibrary.simpleMessage("Adventure"),
     "already_have_account_question": MessageLookupByLibrary.simpleMessage(
@@ -32,6 +33,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirm_password": MessageLookupByLibrary.simpleMessage(
       "Confirm Password",
     ),
+    "congratualtions": MessageLookupByLibrary.simpleMessage("congratualtions"),
     "create_account": MessageLookupByLibrary.simpleMessage("Create Account"),
     "create_one": MessageLookupByLibrary.simpleMessage("Create One"),
     "create_watchlists": MessageLookupByLibrary.simpleMessage(
@@ -95,6 +97,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Rate, Review, and Learn",
     ),
     "register": MessageLookupByLibrary.simpleMessage("Register"),
+    "registered_successfully": MessageLookupByLibrary.simpleMessage(
+      "Registered successfully",
+    ),
     "save_movies_watchlist": MessageLookupByLibrary.simpleMessage(
       "Save movies to your watchlist to keep track of what you want to watch next. Enjoy films in various qualities and genres.",
     ),
@@ -104,6 +109,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "see_more": MessageLookupByLibrary.simpleMessage("See More"),
     "share_thoughts_movies": MessageLookupByLibrary.simpleMessage(
       "Share your thoughts on the movies you\'ve watched. Dive deep into film details and help others discover great movies with your reviews.",
+    ),
+    "sign_in_successfully": MessageLookupByLibrary.simpleMessage(
+      "Sign in successfully",
     ),
     "similar": MessageLookupByLibrary.simpleMessage("Similar"),
     "start_watching_now": MessageLookupByLibrary.simpleMessage(

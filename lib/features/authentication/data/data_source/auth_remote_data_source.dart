@@ -4,10 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:movies/constants.dart';
 import 'package:movies/core/services/failure.dart';
 import 'package:movies/core/services/shared_prefs.dart';
+import 'package:movies/features/authentication/data/models/sign_in_user_request.dart';
 import 'package:movies/features/authentication/data/models/sign_up_user_request.dart';
 
 abstract class AuthRemoteDataSource {
   Future<Either<Failure, UserCredential>> createNewUser(SignUpUserRequest user);
+  Future<Either<Failure, UserCredential>> signInUser(SignInUserRequest user);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -44,12 +46,32 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   void storeUserInfoInLocalStorage(
       SignUpUserRequest user, UserCredential userCredential) {
-    SharedPrefs.setString(SharedPrefs.userEmail, user.userEmail);
-    SharedPrefs.setString(SharedPrefs.userID, userCredential.user!.uid);
-    SharedPrefs.setString(SharedPrefs.userName, user.userEmail);
+    SharedPrefs.setString(key: SharedPrefs.userEmail, value: user.userEmail);
+    SharedPrefs.setString(
+        key: SharedPrefs.userID, value: userCredential.user!.uid);
+    SharedPrefs.setString(key: SharedPrefs.userName, value: user.userEmail);
   }
 
   void storeUserRegisterationInLocalStorage() {
-    SharedPrefs.setBool(SharedPrefs.isRegisteredBefore, true);
+    SharedPrefs.setBool(key: SharedPrefs.isRegisteredBefore, value: true);
+  }
+
+  @override
+  Future<Either<Failure, UserCredential>> signInUser(
+      SignInUserRequest user) async {
+    try {
+      UserCredential credential = await firebaseAuth.signInWithEmailAndPassword(
+          email: user.email, password: user.password);
+      storeUserLoginedBeforeInLocalStorage();
+      return Right(credential);
+    } on FirebaseAuthException catch (fireBaseAuthException) {
+      return Left(Failure(errMessage: fireBaseAuthException.message!));
+    } catch (e) {
+      return Left(Failure(errMessage: e.toString()));
+    }
+  }
+
+  void storeUserLoginedBeforeInLocalStorage() {
+    SharedPrefs.setBool(key: SharedPrefs.isLoginedBefore, value: true);
   }
 }

@@ -50,9 +50,10 @@ class _RegisterFormState extends State<RegisterForm> {
           showAwesomeSnackBar(
             contentType: ContentType.success,
             context: context,
-            message: state.successMessage,
-            title: "congratulations",
+            message: S.of(context).registered_successfully,
+            title: S.of(context).congratualtions,
           );
+          context.pop();
         }
 
         if (state is AuthFailure) {
@@ -61,7 +62,7 @@ class _RegisterFormState extends State<RegisterForm> {
             contentType: ContentType.failure,
             context: context,
             message: state.errMessage,
-            title: "Opps",
+            title: S.of(context).Opps,
           );
           print(state.errMessage);
         }

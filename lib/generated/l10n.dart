@@ -459,6 +459,41 @@ class S {
       args: [],
     );
   }
+
+  /// `congratualtions`
+  String get congratualtions {
+    return Intl.message(
+      'congratualtions',
+      name: 'congratualtions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Opps`
+  String get Opps {
+    return Intl.message('Opps', name: 'Opps', desc: '', args: []);
+  }
+
+  /// `Registered successfully`
+  String get registered_successfully {
+    return Intl.message(
+      'Registered successfully',
+      name: 'registered_successfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign in successfully`
+  String get sign_in_successfully {
+    return Intl.message(
+      'Sign in successfully',
+      name: 'sign_in_successfully',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

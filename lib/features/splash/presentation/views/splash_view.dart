@@ -41,7 +41,7 @@ class _SplashViewState extends State<SplashView> {
   void navigateTo() async {
     await Future.delayed(const Duration(seconds: 2));
     bool seenBefore =
-        await SharedPrefs.getBool(SharedPrefs.isOnBoardingSeenBefore) ?? false;
+        await SharedPrefs.getBool(key:  SharedPrefs.isOnBoardingSeenBefore) ?? false;
 
     if (seenBefore == true) {
       context.pushReplacementNamed(LoginView.id);

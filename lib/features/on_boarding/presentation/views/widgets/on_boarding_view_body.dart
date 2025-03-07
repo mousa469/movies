@@ -30,7 +30,7 @@ class _OnBoardingViewBodyState extends State<OnBoardingViewBody> {
       }
 
       if (currentIndex == OnBoardingModel.onBoardingList.length - 1) {
-        SharedPrefs.setBool(SharedPrefs.isOnBoardingSeenBefore, true);
+        SharedPrefs.setBool(key: SharedPrefs.isOnBoardingSeenBefore,value:  true);
         context.pushReplacementNamed(LoginView.id);
       }
     });

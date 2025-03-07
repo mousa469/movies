@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "Opps": MessageLookupByLibrary.simpleMessage("انتبه"),
     "action": MessageLookupByLibrary.simpleMessage("أكشن"),
     "adventure": MessageLookupByLibrary.simpleMessage("مغامرة"),
     "already_have_account_question": MessageLookupByLibrary.simpleMessage(
@@ -32,6 +33,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirm_password": MessageLookupByLibrary.simpleMessage(
       "تأكيد كلمة المرور",
     ),
+    "congratualtions": MessageLookupByLibrary.simpleMessage("مبارك"),
     "create_account": MessageLookupByLibrary.simpleMessage("إنشاء حساب"),
     "create_one": MessageLookupByLibrary.simpleMessage("أنشئ حسابًا"),
     "create_watchlists": MessageLookupByLibrary.simpleMessage(
@@ -93,6 +95,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "قيّم، راجع، وتعلم",
     ),
     "register": MessageLookupByLibrary.simpleMessage("تسجيل"),
+    "registered_successfully": MessageLookupByLibrary.simpleMessage(
+      "تم التسجيل بنجاح",
+    ),
     "save_movies_watchlist": MessageLookupByLibrary.simpleMessage(
       "احفظ الأفلام في قائمة المشاهدة الخاصة بك لتتبع ما تريد مشاهدته لاحقًا. استمتع بالأفلام بجودات وأنواع مختلفة.",
     ),
@@ -102,6 +107,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "see_more": MessageLookupByLibrary.simpleMessage("عرض المزيد"),
     "share_thoughts_movies": MessageLookupByLibrary.simpleMessage(
       "شارك أفكارك حول الأفلام التي شاهدتها. تعمّق في تفاصيل الأفلام وساعد الآخرين في اكتشاف أفلام رائعة من خلال مراجعاتك.",
+    ),
+    "sign_in_successfully": MessageLookupByLibrary.simpleMessage(
+      "تم تسجيل الدخول بنجاح",
     ),
     "similar": MessageLookupByLibrary.simpleMessage("مشابه"),
     "start_watching_now": MessageLookupByLibrary.simpleMessage(

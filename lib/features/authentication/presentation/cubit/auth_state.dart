@@ -9,9 +9,8 @@ final class AuthLoading extends AuthState {}
 
 final class AuthSuccess extends AuthState {
   final UserCredential userCredential;
-  final String successMessage ;
 
-  AuthSuccess( {required this.userCredential ,this.successMessage = "Registered Successfully" });
+  AuthSuccess( {required this.userCredential   });
 }
 
 final class AuthFailure extends AuthState {

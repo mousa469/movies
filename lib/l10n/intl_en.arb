@@ -52,7 +52,13 @@
     "email_address_is_required" : "email address is required ",
     "password_is_required" : "password is required ",
     "name_is_required" :  "name is required"     ,
-    "phone_number_is_required" : "phone number is required"
+    "phone_number_is_required" : "phone number is required",
+"congratualtions":"congratualtions",
+"Opps":"Opps",
+"registered_successfully": "Registered successfully",
+  "sign_in_successfully": "Sign in successfully"
+
+
 
 
 

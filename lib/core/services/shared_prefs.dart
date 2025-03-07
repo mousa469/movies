@@ -7,41 +7,42 @@ class SharedPrefs {
   static const String userEmail = "userEmail";
   static const String userName = "userName";
   static const String userID = "userID";
+  static const String isLoginedBefore = "isLoginedBefore";
 
 
   static Future<void> init() async {
     sharedPreferences = await SharedPreferences.getInstance();
   }
 
-  static Future<void> setString(String key, String value) async {
+  static Future<void> setString({required String key, required  String value}) async {
     await sharedPreferences.setString(key, value);
   }
 
-  static Future<String?> getString(String key) async {
+  static Future<String?> getString({required String key}) async {
     return sharedPreferences.getString(key);
   }
 
-  static Future<void> setBool(String key, bool value) async {
+  static Future<void> setBool({required String key, required bool value}) async {
     await sharedPreferences.setBool(key, value);
   }
 
-  static Future<bool?> getBool(String key) async {
+  static Future<bool?> getBool({required String key}) async {
     return sharedPreferences.getBool(key);
   }
 
-  static Future<void> setDouble(String key, double value) async {
+  static Future<void> setDouble({required String key,required  double value}) async {
     await sharedPreferences.setDouble(key, value);
   }
 
-  static Future<double?> getDouble(String key) async {
+  static Future<double?> getDouble({required String key}) async {
     return sharedPreferences.getDouble(key);
   }
 
-  static Future<void> setInt(String key, int value) async {
+  static Future<void> setInt({required String key,required  int value}) async {
     await sharedPreferences.setInt(key, value);
   }
 
-  static Future<int?> getInt(String key) async {
+  static Future<int?> getInt({required String key}) async {
     return sharedPreferences.getInt(key);
   }
 }
