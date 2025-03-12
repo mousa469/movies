@@ -99,7 +99,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       textInputAction: widget.action ?? TextInputAction.done,
       focusNode: widget.focusNode,
-      cursorColor: theme.primaryColor,
+      cursorColor: AppColors.whiteColor,
       decoration: InputDecoration(
         labelText: widget.label,
         labelStyle: theme.textTheme.bodyMedium?.copyWith(

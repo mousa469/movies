@@ -23,6 +23,9 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "Opps": MessageLookupByLibrary.simpleMessage("انتبه"),
+    "account_exists": MessageLookupByLibrary.simpleMessage(
+      "يوجد حساب بالفعل لهذا البريد الإلكتروني.",
+    ),
     "action": MessageLookupByLibrary.simpleMessage("أكشن"),
     "adventure": MessageLookupByLibrary.simpleMessage("مغامرة"),
     "already_have_account_question": MessageLookupByLibrary.simpleMessage(
@@ -52,6 +55,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "email_address_is_required": MessageLookupByLibrary.simpleMessage(
       "البريد الالكتروني مطلوب",
     ),
+    "error_occurred": MessageLookupByLibrary.simpleMessage(
+      "حدث خطأ، يرجى المحاولة لاحقًا.",
+    ),
     "exit": MessageLookupByLibrary.simpleMessage("خروج"),
     "explore_all_genres": MessageLookupByLibrary.simpleMessage(
       "استكشف جميع الأنواع",
@@ -75,6 +81,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "احصل على وصول إلى مكتبة ضخمة من الأفلام تناسب جميع الأذواق. ستعجبك بالتأكيد.",
     ),
     "login": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
+    "login_with_facebook": MessageLookupByLibrary.simpleMessage(
+      "تسجيل الدخول بواسطة الفيسبوك",
+    ),
     "login_with_google": MessageLookupByLibrary.simpleMessage(
       "تسجيل الدخول باستخدام جوجل",
     ),
@@ -85,6 +94,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
     "password_is_required": MessageLookupByLibrary.simpleMessage(
       "  كلمه السر مطلوبه",
+    ),
+    "password_mismatch": MessageLookupByLibrary.simpleMessage(
+      "كلمة المرور وتأكيد كلمة المرور غير متطابقين. يرجى المحاولة مرة أخرى.",
     ),
     "phone_number": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
     "phone_number_is_required": MessageLookupByLibrary.simpleMessage(
@@ -120,7 +132,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "verify_email": MessageLookupByLibrary.simpleMessage(
       "تحقق من البريد الإلكتروني",
     ),
+    "warning": MessageLookupByLibrary.simpleMessage("تحذير"),
     "watch": MessageLookupByLibrary.simpleMessage("مشاهدة"),
+    "weak_password": MessageLookupByLibrary.simpleMessage(
+      "كلمة المرور التي تم إدخالها ضعيفة جدًا.",
+    ),
     "wish_list": MessageLookupByLibrary.simpleMessage("قائمة الرغبات"),
   };
 }

@@ -10,8 +10,7 @@ import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/core/theme/app_styles.dart';
 import 'package:movies/core/widgets/custom_button.dart';
 import 'package:movies/core/widgets/custom_text_form_field.dart';
-import 'package:movies/features/authentication/data/models/sign_in_user_request.dart';
-import 'package:movies/features/authentication/presentation/cubit/auth_cubit.dart';
+import 'package:movies/features/authentication/presentation/sign_in_cubit/sign_in_cubit.dart';
 import 'package:movies/features/authentication/presentation/views/register.dart';
 import 'package:movies/features/authentication/presentation/views/reset_password_view.dart';
 import 'package:movies/features/authentication/presentation/views/widgets/custom_text_button.dart';
@@ -39,24 +38,25 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(
+    return BlocListener<SignInCubit, SignInState>(
       listener: (context, state) {
-        if (state is AuthLoading) {
+        if (state is SignInLoading) {
           CustomEasyLoading.showLoading();
         }
 
-        if (state is AuthSuccess) {
+        if (state is SignInSuccess) {
           CustomEasyLoading.hideLoading();
           showAwesomeSnackBar(
               context: context,
               title: S.of(context).congratualtions,
               message: S.of(context).sign_in_successfully,
               contentType: ContentType.success);
-          context.pushAndRemoveUntil(LayoutView.id,
-              arguments: state.userCredential);
+          context.pushAndRemoveUntil(
+            LayoutView.id,
+          );
         }
 
-        if (state is AuthFailure) {
+        if (state is SignInFailure) {
           CustomEasyLoading.hideLoading();
           showAwesomeSnackBar(
               context: context,
@@ -121,9 +121,9 @@ class _LoginFormState extends State<LoginForm> {
               ),
               onPressed: () {
                 if (formKey.currentState!.validate()) {
-                  context.read<AuthCubit>().signInUser(SignInUserRequest(
+                  context.read<SignInCubit>().signInUser(
                       email: emailController.text,
-                      password: passwordController.text));
+                      password: passwordController.text);
                 }
               },
             ),
@@ -174,6 +174,9 @@ class _LoginFormState extends State<LoginForm> {
             16.verticalSpace(),
 
             CustomElevatedButton(
+              onPressed: () {
+                context.read<SignInCubit>().signInWithGoogle();
+              },
               color: AppColors.kPrimaryColor,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -188,6 +191,34 @@ class _LoginFormState extends State<LoginForm> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     S.of(context).login_with_google,
+                    style: AppStyles.textStyle20RegularAuto.copyWith(
+                      color: AppColors.secondaryBlackColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            8.verticalSpace(),
+
+
+            CustomElevatedButton(
+              onPressed: () {
+                context.read<SignInCubit>().signInWithFacebook();
+              },
+              color: AppColors.kPrimaryColor,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    Assets.iconsFacebookAppSymbol,
+                    width: 23,
+                    height: 30,
+                  ),
+                  10.horizontalSpace(),
+                  Text(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    S.of(context).login_with_facebook,
                     style: AppStyles.textStyle20RegularAuto.copyWith(
                       color: AppColors.secondaryBlackColor,
                     ),

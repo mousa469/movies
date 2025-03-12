@@ -1,11 +1,18 @@
+import 'dart:convert';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:movies/core/helper%20functions/custom_easy_loading.dart';
 import 'package:movies/core/router/app_router.dart';
+import 'package:movies/core/services/bloc_observer.dart';
+import 'package:movies/core/services/get_it_services.dart';
 import 'package:movies/core/services/shared_prefs.dart';
 import 'package:movies/core/theme/app_colors.dart';
+import 'package:movies/features/authentication/presentation/views/login_view.dart';
+import 'package:movies/features/layout/presentation/views/layout_view.dart';
 import 'package:movies/features/splash/presentation/views/splash_view.dart';
 import 'package:movies/firebase_options.dart';
 import 'package:movies/generated/l10n.dart';
@@ -17,6 +24,12 @@ void main() async {
   );
   CustomEasyLoading.configLoading();
   await SharedPrefs.init();
+  setup();
+
+  Bloc.observer = SimpleBlocObserver();
+
+
+
   runApp(const MyApp());
 }
 
@@ -36,7 +49,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: S.delegate.supportedLocales,
-      initialRoute: SplashView.id,
+      initialRoute: LoginView.id,
       onGenerateRoute: AppRouter.onGenerateRoute,
       locale: Locale("en"),
       title: 'Flutter Demo',

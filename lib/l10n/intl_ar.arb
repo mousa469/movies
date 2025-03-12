@@ -56,7 +56,14 @@
     "congratualtions":"مبارك",
     "Opps":"انتبه",
      "registered_successfully": "تم التسجيل بنجاح",
-  "sign_in_successfully": "تم تسجيل الدخول بنجاح"
+  "sign_in_successfully": "تم تسجيل الدخول بنجاح",
+  "warning": "تحذير",
+  "password_mismatch": "كلمة المرور وتأكيد كلمة المرور غير متطابقين. يرجى المحاولة مرة أخرى.",
+  "error_occurred": "حدث خطأ، يرجى المحاولة لاحقًا.",
+  "weak_password": "كلمة المرور التي تم إدخالها ضعيفة جدًا.",
+  "account_exists": "يوجد حساب بالفعل لهذا البريد الإلكتروني.",
+  "login_with_facebook":"تسجيل الدخول بواسطة الفيسبوك"
+
     
 
 

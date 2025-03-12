@@ -56,7 +56,14 @@
 "congratualtions":"congratualtions",
 "Opps":"Opps",
 "registered_successfully": "Registered successfully",
-  "sign_in_successfully": "Sign in successfully"
+  "sign_in_successfully": "Sign in successfully",
+  "warning": "Warning",
+  "password_mismatch": "Password and Confirm Password do not match. Please try again.",
+  "error_occurred": "An error occurred, Please try again later.",
+  "weak_password": "The password provided is too weak.",
+  "account_exists": "The account already exists for that email.",
+  "login_with_facebook":" login with facebook"
+
 
 
 

@@ -494,6 +494,61 @@ class S {
       args: [],
     );
   }
+
+  /// `Warning`
+  String get warning {
+    return Intl.message('Warning', name: 'warning', desc: '', args: []);
+  }
+
+  /// `Password and Confirm Password do not match. Please try again.`
+  String get password_mismatch {
+    return Intl.message(
+      'Password and Confirm Password do not match. Please try again.',
+      name: 'password_mismatch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An error occurred, Please try again later.`
+  String get error_occurred {
+    return Intl.message(
+      'An error occurred, Please try again later.',
+      name: 'error_occurred',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The password provided is too weak.`
+  String get weak_password {
+    return Intl.message(
+      'The password provided is too weak.',
+      name: 'weak_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The account already exists for that email.`
+  String get account_exists {
+    return Intl.message(
+      'The account already exists for that email.',
+      name: 'account_exists',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` login with facebook`
+  String get login_with_facebook {
+    return Intl.message(
+      ' login with facebook',
+      name: 'login_with_facebook',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

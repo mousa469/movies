@@ -23,6 +23,9 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "Opps": MessageLookupByLibrary.simpleMessage("Opps"),
+    "account_exists": MessageLookupByLibrary.simpleMessage(
+      "The account already exists for that email.",
+    ),
     "action": MessageLookupByLibrary.simpleMessage("Action"),
     "adventure": MessageLookupByLibrary.simpleMessage("Adventure"),
     "already_have_account_question": MessageLookupByLibrary.simpleMessage(
@@ -52,6 +55,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "email_address_is_required": MessageLookupByLibrary.simpleMessage(
       "email address is required ",
     ),
+    "error_occurred": MessageLookupByLibrary.simpleMessage(
+      "An error occurred, Please try again later.",
+    ),
     "exit": MessageLookupByLibrary.simpleMessage("Exit"),
     "explore_all_genres": MessageLookupByLibrary.simpleMessage(
       "Explore All Genres",
@@ -75,6 +81,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Get access to a huge library of movies to suit all tastes. You will surely like it.",
     ),
     "login": MessageLookupByLibrary.simpleMessage("Login"),
+    "login_with_facebook": MessageLookupByLibrary.simpleMessage(
+      " login with facebook",
+    ),
     "login_with_google": MessageLookupByLibrary.simpleMessage(
       "Login With Google",
     ),
@@ -87,6 +96,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "password": MessageLookupByLibrary.simpleMessage("Password"),
     "password_is_required": MessageLookupByLibrary.simpleMessage(
       "password is required ",
+    ),
+    "password_mismatch": MessageLookupByLibrary.simpleMessage(
+      "Password and Confirm Password do not match. Please try again.",
     ),
     "phone_number": MessageLookupByLibrary.simpleMessage("Phone Number"),
     "phone_number_is_required": MessageLookupByLibrary.simpleMessage(
@@ -120,7 +132,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "summary": MessageLookupByLibrary.simpleMessage("Summary"),
     "update_data": MessageLookupByLibrary.simpleMessage("Update Data"),
     "verify_email": MessageLookupByLibrary.simpleMessage("Verify Email"),
+    "warning": MessageLookupByLibrary.simpleMessage("Warning"),
     "watch": MessageLookupByLibrary.simpleMessage("Watch"),
+    "weak_password": MessageLookupByLibrary.simpleMessage(
+      "The password provided is too weak.",
+    ),
     "wish_list": MessageLookupByLibrary.simpleMessage("Wish List"),
   };
 }

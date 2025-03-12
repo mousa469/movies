@@ -9,8 +9,8 @@ import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/core/theme/app_styles.dart';
 import 'package:movies/core/widgets/custom_button.dart';
 import 'package:movies/core/widgets/custom_text_form_field.dart';
-import 'package:movies/features/authentication/data/models/sign_up_user_request.dart';
-import 'package:movies/features/authentication/presentation/cubit/auth_cubit.dart';
+import 'package:movies/features/authentication/data/models/user_model.dart';
+import 'package:movies/features/authentication/presentation/sign_up_cubit/sign_up_cubit.dart';
 import 'package:movies/generated/l10n.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -39,13 +39,13 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(
+    return BlocListener<SignUpCubit, SignUpState>(
       listener: (context, state) {
-        if (state is AuthLoading) {
+        if (state is SignUpLoading) {
           CustomEasyLoading.showLoading();
         }
 
-        if (state is AuthSuccess) {
+        if (state is SignUpSuccess) {
           CustomEasyLoading.hideLoading();
           showAwesomeSnackBar(
             contentType: ContentType.success,
@@ -56,7 +56,7 @@ class _RegisterFormState extends State<RegisterForm> {
           context.pop();
         }
 
-        if (state is AuthFailure) {
+        if (state is SignUpFailure) {
           CustomEasyLoading.hideLoading();
           showAwesomeSnackBar(
             contentType: ContentType.failure,
@@ -64,7 +64,6 @@ class _RegisterFormState extends State<RegisterForm> {
             message: state.errMessage,
             title: S.of(context).Opps,
           );
-          print(state.errMessage);
         }
       },
       child: Form(
@@ -166,11 +165,19 @@ class _RegisterFormState extends State<RegisterForm> {
               ),
               onPressed: () {
                 if (formKey.currentState!.validate()) {
-                  context.read<AuthCubit>().createNewUser(SignUpUserRequest(
-                      phone: phoneController.text,
-                      userEmail: emailController.text,
-                      userName: nameController.text,
-                      password: passwordController.text));
+                  if (passwordController.text == rePasswordController.text) {
+                    context.read<SignUpCubit>().createNewUser(
+                        phone: phoneController.text,
+                        name: nameController.text,
+                        password: passwordController.text,
+                        email: emailController.text);
+                  } else {
+                    showAwesomeSnackBar(
+                        context: context,
+                        title: S.of(context).warning,
+                        message: S.of(context).password_mismatch,
+                        contentType: ContentType.warning);
+                  }
                 }
               },
             ),

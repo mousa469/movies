@@ -1,69 +1,50 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:movies/constants.dart';
+import 'package:movies/core/services/custom_exception.dart';
 import 'package:movies/core/services/failure.dart';
-import 'package:movies/core/services/shared_prefs.dart';
-import 'package:movies/features/authentication/data/models/sign_in_user_request.dart';
-import 'package:movies/features/authentication/data/models/sign_up_user_request.dart';
+import 'package:movies/core/services/firbase_auth_services.dart';
+import 'package:movies/features/authentication/data/models/user_model.dart';
+import 'package:movies/features/authentication/domain/entites/user_entity.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<Either<Failure, UserCredential>> createNewUser(SignUpUserRequest user);
-  Future<Either<Failure, UserCredential>> signInUser(SignInUserRequest user);
+  Future<Either<Failure, UserEntity>> createNewUser(
+      {required String email, required String password});
+  Future<Either<Failure, UserEntity>> signInUser(
+      {required String email, required String password});
+  Future<Either<Failure, UserEntity>> signInWithGoogle();
+  Future<Either<Failure, UserEntity>> signInWithFacebook();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
-  FirebaseAuth firebaseAuth;
+  FirebaseAuthServices firebaseAuthServices;
   FirebaseFirestore firebaseFirestore;
 
   AuthRemoteDataSourceImpl(
-      {required this.firebaseAuth, required this.firebaseFirestore});
+      {required this.firebaseAuthServices, required this.firebaseFirestore});
   @override
-  Future<Either<Failure, UserCredential>> createNewUser(
-      SignUpUserRequest user) async {
+  Future<Either<Failure, UserEntity>> createNewUser(
+      {required String email, required String password}) async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: user.userEmail, password: user.password!);
-
-      storeUserInfoInFirestore(userCredential, user);
-      storeUserRegisterationInLocalStorage();
-      storeUserInfoInLocalStorage(user, userCredential);
-      return right(userCredential);
-    } on FirebaseAuthException catch (firebaseAuthException) {
-      return left(Failure(errMessage: firebaseAuthException.message!));
+      var user = await firebaseAuthServices.createNewUser(
+          email: email, password: password);
+      return right(UserModel.fromFirebase(user: user));
+    } on CustomException catch (customEX) {
+      return left(ServerFailure(errMessage: customEX.errMessage));
     } catch (e) {
-      return Left(Failure(errMessage: e.toString()));
+      return Left(ServerFailure(errMessage: e.toString()));
     }
   }
 
-  void storeUserInfoInFirestore(
-      UserCredential userCredential, SignUpUserRequest user) {
-    CollectionReference users = firebaseFirestore.collection(usersCollection);
-    user.userID = userCredential.user!.uid;
-    users.add(user.toJson());
-  }
-
-  void storeUserInfoInLocalStorage(
-      SignUpUserRequest user, UserCredential userCredential) {
-    SharedPrefs.setString(key: SharedPrefs.userEmail, value: user.userEmail);
-    SharedPrefs.setString(
-        key: SharedPrefs.userID, value: userCredential.user!.uid);
-    SharedPrefs.setString(key: SharedPrefs.userName, value: user.userEmail);
-  }
-
-  void storeUserRegisterationInLocalStorage() {
-    SharedPrefs.setBool(key: SharedPrefs.isRegisteredBefore, value: true);
-  }
-
   @override
-  Future<Either<Failure, UserCredential>> signInUser(
-      SignInUserRequest user) async {
+  Future<Either<Failure, UserEntity>> signInUser(
+      {required String email, required String password}) async {
     try {
-      UserCredential credential = await firebaseAuth.signInWithEmailAndPassword(
-          email: user.email, password: user.password);
-      storeUserLoginedBeforeInLocalStorage();
-      return Right(credential);
+      User credential = await firebaseAuthServices.signInWithEmailAndPassword(
+          email: email, password: password);
+      return Right(UserModel.fromFirebase(user: credential));
     } on FirebaseAuthException catch (fireBaseAuthException) {
       return Left(Failure(errMessage: fireBaseAuthException.message!));
     } catch (e) {
@@ -71,7 +52,25 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-  void storeUserLoginedBeforeInLocalStorage() {
-    SharedPrefs.setBool(key: SharedPrefs.isLoginedBefore, value: true);
+  @override
+  Future<Either<Failure, UserEntity>> signInWithGoogle() async {
+    try {
+      return right(UserModel.fromFirebase(
+          user: await firebaseAuthServices.signInWithGoogle()));
+    } on CustomException catch (e) {
+      log("exception come from AuthRemoteDataSourceImp.signInWithGoogle and message is : ${e.errMessage}");
+      return left(Failure(errMessage: e.errMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserEntity>> signInWithFacebook() async {
+    try {
+      var user = await firebaseAuthServices.signInWithFacebook();
+
+      return right(UserModel.fromFirebase(user: user));
+    } on CustomException catch (e) {
+      return Left(Failure(errMessage: e.errMessage));
+    }
   }
 }
