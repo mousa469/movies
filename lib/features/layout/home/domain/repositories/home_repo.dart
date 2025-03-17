@@ -4,4 +4,5 @@ import 'package:movies/features/layout/home/domain/entities/movie_entity.dart';
 
 abstract class HomeRepo {
  Future<Either<Failure,List<MovieEntity>>>  fetchAvailableMovies();
+ Future<Either<Failure,List<MovieEntity>>>  fetchWatchNowMovies();
 }

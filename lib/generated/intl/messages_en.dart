@@ -23,6 +23,9 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "Opps": MessageLookupByLibrary.simpleMessage("Opps"),
+    "SomethingWentWrong": MessageLookupByLibrary.simpleMessage(
+      "Something went wrong. Please try again.",
+    ),
     "account_exists": MessageLookupByLibrary.simpleMessage(
       "The account already exists for that email.",
     ),

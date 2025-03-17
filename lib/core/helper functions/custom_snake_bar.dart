@@ -14,7 +14,7 @@ void showAwesomeSnackBar({required BuildContext context, required String title,r
     ),
   );
 
-  ScaffoldMessenger.of(context)
+   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
     ..showSnackBar(snackBar);
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movies/core/widgets/test.dart';
 import 'package:movies/features/authentication/presentation/views/login_view.dart';
 import 'package:movies/features/authentication/presentation/views/register.dart';
 import 'package:movies/features/authentication/presentation/views/reset_password_view.dart';
@@ -11,6 +12,8 @@ class AppRouter {
     switch (settings.name) {
       case SplashView.id:
         return MaterialPageRoute(builder: (context) => SplashView());
+      case Test.id:
+        return MaterialPageRoute(builder: (context) => Test());
       case OnBoardingView.id:
         return MaterialPageRoute(builder: (context) => OnBoardingView());
       case LoginView.id:

@@ -17,7 +17,7 @@ class AvailableMoviesLocalDataSourceImpl
   void cacheLastAvailableMovies({List<MovieModel>? movies}) {
     if (movies != null) {
       SharedPrefs.setString(
-          key: SharedPrefs.lastMoviesList,
+          key: SharedPrefs.lastAvailableMoviesList,
           value: jsonEncode(movies.map((movie) => movie.toJson()).toList()));
     } else {
       log("exception from AvailableMoviesLocalDataSourceImpl.cacheLastAvailableMovies ");
@@ -28,7 +28,7 @@ class AvailableMoviesLocalDataSourceImpl
   @override
   Future<List<MovieModel>> fetchAvailableMovies() async {
     String? movies =
-        await SharedPrefs.getString(key: SharedPrefs.lastMoviesList);
+        await SharedPrefs.getString(key: SharedPrefs.lastAvailableMoviesList);
 
     if (movies != null) {
       List<dynamic> decodedMovies = jsonDecode(movies);
@@ -36,14 +36,14 @@ class AvailableMoviesLocalDataSourceImpl
       List<MovieModel> movieList = [];
 
       for (var movie in decodedMovies) {
-        movieList.add(MovieModel.fromJson(movie));
+        movieList.add(MovieModel.fromJson(movie as Map<String,dynamic>));
       }
 
       return movieList;
     } else {
       log("exception from AvailableMoviesLocalDataSourceImpl.fetchAvailableMovies ");
 
-      throw CachException(errMessage: "list of movies is null");
+      throw CachException(errMessage: "no internet connection");
     }
   }
 }

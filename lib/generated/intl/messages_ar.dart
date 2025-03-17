@@ -23,6 +23,9 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "Opps": MessageLookupByLibrary.simpleMessage("انتبه"),
+    "SomethingWentWrong": MessageLookupByLibrary.simpleMessage(
+      "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    ),
     "account_exists": MessageLookupByLibrary.simpleMessage(
       "يوجد حساب بالفعل لهذا البريد الإلكتروني.",
     ),

@@ -11,7 +11,8 @@ class SharedPrefs {
   static const String userName = "userName";
   static const String userID = "userID";
   static const String isLoginedBefore = "isLoginedBefore";
-  static const String lastMoviesList = "lastMoviesList";
+  static const String lastAvailableMoviesList = "lastMoviesList";
+  static const String lastWatchNowMoviesList = "lastMoviesList";
 
   static Future<void> init() async {
     sharedPreferences = await SharedPreferences.getInstance();

@@ -62,7 +62,9 @@
   "error_occurred": "An error occurred, Please try again later.",
   "weak_password": "The password provided is too weak.",
   "account_exists": "The account already exists for that email.",
-  "login_with_facebook":" login with facebook"
+  "login_with_facebook":" login with facebook",
+  "SomethingWentWrong": "Something went wrong. Please try again."
+
 
 
 

@@ -1,0 +1,35 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+abstract class DatabaseServices {
+  Future storeData({required String path, required dynamic data, String? id});
+  Future<Map<String, dynamic>> fetchData({required String path, String? id});
+  Future<bool> checkIfDataExist({required String path, required String id});
+}
+
+class FirebaseFirestoreService implements DatabaseServices {
+  FirebaseFirestore firebaseFirestore;
+  FirebaseFirestoreService({required this.firebaseFirestore});
+  @override
+  Future storeData(
+      {required String path, required dynamic data, String? id}) async {
+    if (id != null) {
+      await firebaseFirestore.collection(path).doc(id).set(data);
+    } else {
+      await firebaseFirestore.collection(path).add(data);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> fetchData(
+      {required String path, String? id}) async {
+    var data = await firebaseFirestore.collection(path).doc(id).get();
+    return data.data() as Map<String, dynamic>;
+  }
+
+  @override
+  Future<bool> checkIfDataExist(
+      {required String path, required String id}) async {
+    var data = await firebaseFirestore.collection(path).doc(id).get();
+    return data.exists;
+  }
+}

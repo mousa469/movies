@@ -33,8 +33,7 @@ class FirebaseAuthServices {
             errMessage: "An error occurred , Please try again later ");
       }
     } catch (e) {
-      throw CustomException(
-          errMessage: "An error occurred , Please try again later  ");
+      throw Exception("An error occurred , Please try again later  ");
     }
   }
 
@@ -60,49 +59,43 @@ class FirebaseAuthServices {
         throw CustomException(errMessage: "Invalid Email or Password");
       }
     } catch (e) {
-      throw CustomException(
-          errMessage: "An error occurred , Please try again later  ");
+      throw Exception("An error occurred , Please try again later  ");
     }
   }
 
   Future<User> signInWithGoogle() async {
-    // Trigger the authentication flow
     try {
       await GoogleSignIn().signOut();
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-      // Obtain the auth details from the request
       final GoogleSignInAuthentication? googleAuth =
           await googleUser?.authentication;
 
-      // Create a new credential
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
 
-      // Once signed in, return the UserCredential
       return (await FirebaseAuth.instance.signInWithCredential(credential))
           .user!;
     } catch (e) {
       log("exception come from FirebaseAuthServices.signInWithGoogle and message is : ${e.toString()}");
 
-      throw CustomException(errMessage: e.toString());
+      throw Exception(e.toString());
     }
   }
 
   Future<User> signInWithFacebook() async {
-    // Trigger the sign-in flow
     try {
-      await FacebookAuth.instance.logOut();
+      // await FacebookAuth.instance.logOut();
 
       final LoginResult loginResult = await FacebookAuth.instance.login();
 
-      // Create a credential from the access token
+      
+
       final OAuthCredential facebookAuthCredential =
           FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
 
-      // Once signed in, return the UserCredential
       return (await FirebaseAuth.instance
               .signInWithCredential(facebookAuthCredential))
           .user!;
@@ -122,7 +115,15 @@ class FirebaseAuthServices {
             errMessage: 'Error occurred using Facebook Sign-In. Try again.');
       }
     } catch (e) {
-      throw CustomException(errMessage: e.toString());
+      throw Exception(e.toString());
+    }
+  }
+
+  Future deleteUserAccount() async {
+    try {
+      await firebaseAuth.currentUser!.delete();
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }

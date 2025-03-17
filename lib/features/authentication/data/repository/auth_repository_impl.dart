@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:movies/core/services/failure.dart';
 import 'package:movies/features/authentication/data/data_source/auth_local_data_source.dart';
@@ -9,8 +11,10 @@ class AuthRepositoryImpl extends AuthRepository {
   AuthRemoteDataSource authRemoteDataSource;
   AuthLocalDataSource authLocalDataSource;
 
-  AuthRepositoryImpl(
-      {required this.authRemoteDataSource, required this.authLocalDataSource});
+  AuthRepositoryImpl({
+    required this.authRemoteDataSource,
+    required this.authLocalDataSource,
+  });
   @override
   Future<Either<Failure, UserEntity>> createNewUser(
       {required String email,
@@ -18,7 +22,8 @@ class AuthRepositoryImpl extends AuthRepository {
       required String name,
       required String phone}) async {
     var result = await authRemoteDataSource.createNewUser(
-        password: password, email: email);
+        password: password, email: email , name: name , phone: phone);
+        
 
     return result;
   }
@@ -37,5 +42,15 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Either<Failure, UserEntity>> signInWithFacebook() async {
     return await authRemoteDataSource.signInWithFacebook();
+  }
+
+  @override
+  Future addUserToDataBase({required UserEntity user}) async {
+    try {
+      await authRemoteDataSource.addUserToDatabase(user: user);
+    } catch (e) {
+      log("exception come from AuthRepositoryImpl.addUserToDataBase and  message is : ${e.toString()} ");
+
+    }
   }
 }

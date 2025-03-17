@@ -11,7 +11,7 @@ import 'package:movies/core/services/bloc_observer.dart';
 import 'package:movies/core/services/get_it_services.dart';
 import 'package:movies/core/services/shared_prefs.dart';
 import 'package:movies/core/theme/app_colors.dart';
-import 'package:movies/features/authentication/presentation/views/login_view.dart';
+
 import 'package:movies/features/layout/presentation/views/layout_view.dart';
 import 'package:movies/features/splash/presentation/views/splash_view.dart';
 import 'package:movies/firebase_options.dart';
@@ -28,8 +28,9 @@ void main() async {
 
   Bloc.observer = SimpleBlocObserver();
 
+  
 
-
+ 
   runApp(const MyApp());
 }
 
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: S.delegate.supportedLocales,
-      initialRoute: LoginView.id,
+      initialRoute: LayoutView.id,
       onGenerateRoute: AppRouter.onGenerateRoute,
       locale: Locale("en"),
       title: 'Flutter Demo',

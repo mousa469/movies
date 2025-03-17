@@ -11,6 +11,7 @@ abstract class AuthRepository {
       required String phone});
   Future<Either<Failure, UserEntity>> signInUser(
       {required String email, required String password});
+  Future addUserToDataBase({required UserEntity user});
   Future<Either<Failure, UserEntity>> signInWithGoogle();
   Future<Either<Failure, UserEntity>> signInWithFacebook();
 }
