@@ -35,6 +35,10 @@ abstract class AppStyles {
     fontWeight: FontWeight.w700,
     fontSize: 36,
   );
+  static const TextStyle textStyle32Bold = TextStyle(
+    fontWeight: FontWeight.w700,
+    fontSize: 32,
+  );
 
   static const TextStyle textStyle20BoldAuto = TextStyle(
     fontWeight: FontWeight.w700,
