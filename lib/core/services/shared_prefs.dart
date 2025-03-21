@@ -13,6 +13,8 @@ class SharedPrefs {
   static const String isLoginedBefore = "isLoginedBefore";
   static const String lastAvailableMoviesList = "lastMoviesList";
   static const String lastWatchNowMoviesList = "lastMoviesList";
+  static const String wishList = "wishList";
+  static const String history = "history";
 
   static Future<void> init() async {
     sharedPreferences = await SharedPreferences.getInstance();
@@ -23,7 +25,7 @@ class SharedPrefs {
     await sharedPreferences.setString(key, value);
   }
 
-  static Future<String?> getString({required String key}) async {
+  static String? getString({required String key}) {
     return sharedPreferences.getString(key);
   }
 
@@ -32,7 +34,7 @@ class SharedPrefs {
     await sharedPreferences.setBool(key, value);
   }
 
-  static Future<bool?> getBool({required String key}) async {
+  static bool? getBool({required String key}) {
     return sharedPreferences.getBool(key);
   }
 
@@ -41,7 +43,7 @@ class SharedPrefs {
     await sharedPreferences.setDouble(key, value);
   }
 
-  static Future<double?> getDouble({required String key}) async {
+  static double? getDouble({required String key}) {
     return sharedPreferences.getDouble(key);
   }
 
@@ -49,25 +51,31 @@ class SharedPrefs {
     await sharedPreferences.setInt(key, value);
   }
 
-  static Future<int?> getInt({required String key}) async {
+  static int? getInt({required String key}) {
     return sharedPreferences.getInt(key);
+  }
+
+  static void setList({required String key, required List<String> value}) {
+    sharedPreferences.setStringList(key, value);
+  }
+
+  static List<String>? getList({required String key}) {
+    return sharedPreferences.getStringList(key);
   }
 
   static void markUserIsLogined() {
     SharedPrefs.setBool(key: isLoginedBefore, value: true);
   }
 
-  static void storeUserInfoInLocalStorage({required UserModel userModel}) {
-    SharedPrefs.setString(key: userEmail, value: userModel.email);
-    SharedPrefs.setString(key: userID, value: userModel.uid!);
-    SharedPrefs.setString(key: userName, value: userModel.name);
+  static void storeUserInfoInLocalStorage(
+      {required String email, required String name, required String uid}) {
+    SharedPrefs.setString(key: userEmail, value: email);
+    SharedPrefs.setString(key: userID, value: uid);
+    SharedPrefs.setString(key: userName, value: name);
+    markUserIsRegistered();
   }
 
   static void markUserIsRegistered() {
     SharedPrefs.setBool(key: isRegisteredBefore, value: true);
   }
-
- 
-
-
 }

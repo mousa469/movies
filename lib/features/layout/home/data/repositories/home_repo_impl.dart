@@ -1,9 +1,14 @@
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:dartz/dartz.dart';
 import 'package:movies/core/services/custom_exception.dart';
 import 'package:movies/core/services/failure.dart';
 import 'package:movies/core/services/network_checker.dart';
+import 'package:movies/features/layout/home/data/datasources/add_movie_to_history_local_data_source.dart';
+import 'package:movies/features/layout/home/data/datasources/add_movie_to_history_remote_data_source.dart';
+import 'package:movies/features/layout/home/data/datasources/add_movie_to_wish_list_local_data_source.dart';
+import 'package:movies/features/layout/home/data/datasources/add_movie_to_wish_list_remote_data_source.dart';
 import 'package:movies/features/layout/home/data/datasources/availabe_movies_remote_data_source.dart';
 import 'package:movies/features/layout/home/data/datasources/available_movies_local_data_source.dart';
 import 'package:movies/features/layout/home/data/datasources/watch_now_movies_local_data_source.dart';
@@ -17,8 +22,17 @@ class HomeRepoImpl extends HomeRepo {
   AvailableMoviesLocalDataSource availableMoviesLocalDataSource;
   WatchNowMoviesLocalDataSource watchNowMoviesLocalDataSource;
   WathchNowMoviesRemoteDataSource wathchNowMoviesRemoteDataSource;
+  AddMovieToWishListLocalDataSource addMovieToWishListLocalDataSource;
+  AddMovieToWishListRemoteDataSource addMovieToWishListRemoteDataSource;
+  AddMovieToHistoryLocalDataSource addMovieToHistoryLocalDataSource;
+  AddMovieToHistoryRemoteDataSource addMovieToHistoryRemoteDataSource;
+
   HomeRepoImpl(
-      {required this.availabeMoviesRemoteDataSource,
+      {required this.addMovieToHistoryLocalDataSource,
+      required this.addMovieToHistoryRemoteDataSource,
+      required this.addMovieToWishListLocalDataSource,
+      required this.addMovieToWishListRemoteDataSource,
+      required this.availabeMoviesRemoteDataSource,
       required this.availableMoviesLocalDataSource,
       required this.watchNowMoviesLocalDataSource,
       required this.wathchNowMoviesRemoteDataSource});
@@ -92,6 +106,60 @@ class HomeRepoImpl extends HomeRepo {
       log("exception from general exception HomeRepoImpl.fetchAvailableMovies and message is : ${e.toString()} ");
 
       return left(ServerFailure(errMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> addMovieToWishList(
+      {required MovieEntity movie}) async {
+    try {
+      bool isConnected = await NetworkChecker.checkInternetConnection();
+      if (isConnected) {
+        await addMovieToWishListRemoteDataSource.addMovieToWishList(
+            movie: movie);
+      } else {
+         addMovieToWishListLocalDataSource.addMovieToWishList(
+            movie: movie);
+      }
+      return Right(null);
+    } on CachException catch (e) {
+      log("cache exception return from HomeRepoImpl.addMovieToWishList and message is : ${e.errMessage}  ");
+      return left(CacheFailure(errMessage: e.errMessage));
+    } on ServerException catch (e) {
+      log("server exception return from HomeRepoImpl.addMovieToWishList and message is : ${e.errMessage}  ");
+
+      return Left(ServerFailure(errMessage: e.errMessage));
+    } catch (e) {
+      log("general exception return from HomeRepoImpl.addMovieToWishList and message is : ${e.toString()}  ");
+
+      return Left(Failure(errMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> addMovieToHistory(
+      {required MovieEntity movie}) async {
+    try {
+      bool isConnected = await NetworkChecker.checkInternetConnection();
+      if (isConnected) {
+        await addMovieToHistoryRemoteDataSource.addMovieToHistory(
+            movie: movie);
+      } else {
+         addMovieToHistoryLocalDataSource.addMovieToHistory(
+            movie: movie);
+      }
+      return Right(null);
+    } on CachException catch (e) {
+      log("cache exception return from HomeRepoImpl.addMovieToWishList and message is : ${e.errMessage}  ");
+      return left(CacheFailure(errMessage: e.errMessage));
+    } on ServerException catch (e) {
+      log("server exception return from HomeRepoImpl.addMovieToWishList and message is : ${e.errMessage}  ");
+
+      return Left(ServerFailure(errMessage: e.errMessage));
+    } catch (e) {
+      log("general exception return from HomeRepoImpl.addMovieToWishList and message is : ${e.toString()}  ");
+
+      return Left(Failure(errMessage: e.toString()));
     }
   }
 }

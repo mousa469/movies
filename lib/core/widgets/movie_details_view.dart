@@ -1,183 +1,219 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:movies/core/assets/app_assets.dart';
+import 'package:movies/core/extensions/media_query_extension.dart';
+import 'package:movies/core/extensions/space_extension.dart';
+import 'package:movies/core/services/get_it_services.dart';
 import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/core/theme/app_styles.dart';
 import 'package:movies/features/layout/home/domain/entities/movie_entity.dart';
+import 'package:movies/features/layout/home/domain/usecases/add_movie_to_history_use_case.dart';
+import 'package:movies/features/layout/home/domain/usecases/add_movie_to_wish_list_use_case.dart';
+import 'package:movies/features/layout/home/presentation/bloc/add_movie_to_history_cubit/add_movie_to_history_cubit.dart';
+import 'package:movies/features/layout/home/presentation/bloc/add_movie_to_wish_list_cubit/add_movie_to_wishlist_cubit.dart';
+import 'package:movies/features/layout/home/presentation/widgets/add_movie_to_wish_list_bloc_consumer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MovieDetailsView extends StatelessWidget {
+class MovieDetailsView extends StatefulWidget {
   static const String id = "movieDetails";
 
   const MovieDetailsView({super.key, required this.movie});
   final MovieEntity movie;
 
   @override
+  State<MovieDetailsView> createState() => _MovieDetailsViewState();
+}
+
+class _MovieDetailsViewState extends State<MovieDetailsView> {
+  @override
+  void initState() {
+  
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 250,
-            floating: false,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  CachedNetworkImage(
-                    imageUrl: movie.poster,
-                    placeholder: (context, url) =>
-                        Lottie.asset(Assets.animationsLoadingAnimation),
-                    errorWidget: (context, url, error) =>
-                        Lottie.asset(Assets.animationsError),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, Colors.black54],
+    return BlocProvider(
+      create: (context) => AddMovieToWishlistCubit(
+          addMovieToWishListUseCase: getIt<AddMovieToWishListUseCase>()),
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              expandedHeight: 250,
+              floating: false,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: widget.movie.poster,
+                      placeholder: (context, url) =>
+                          Lottie.asset(Assets.animationsLoadingAnimation),
+                      errorWidget: (context, url, error) =>
+                          Lottie.asset(Assets.animationsError),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [Colors.transparent, Colors.black54],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Title and Year
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          movie.poster,
-                          width: 100,
-                          height: 150,
-                          fit: BoxFit.cover,
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title and Year
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: CachedNetworkImage(
+                            width: context.screenWidth(.3),
+                            height: context.screenHeight(.2),
+                            imageUrl: widget.movie.poster,
+                            placeholder: (context, url) =>
+                                Lottie.asset(Assets.animationsLoadingAnimation),
+                            errorWidget: (context, url, error) =>
+                                Lottie.asset(Assets.animationsError),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              movie.titleLong,
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Row(
-                              children: [
-                                Icon(Icons.star, color: Colors.amber, size: 20),
-                                SizedBox(width: 4),
-                                Text(
-                                  '${movie.rating}/10',
-                                  style: TextStyle(fontSize: 16),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.movie.titleLong,
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              ],
-                            ),
+                              ),
+                              SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Icon(Icons.star,
+                                      color: Colors.amber, size: 20),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    '${widget.movie.rating}/10',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16),
+
+                    // Genres
+                    Wrap(
+                      spacing: 8,
+                      children: (widget.movie.genres as List)
+                          .map((genre) => Chip(
+                                label: Text(genre,
+                                    style: AppStyles.textStyle16Regular
+                                        .copyWith(
+                                            color:
+                                                AppColors.secondaryBlackColor)),
+                                backgroundColor: Colors.blue[100],
+                              ))
+                          .toList(),
+                    ),
+                    SizedBox(height: 16),
+
+                    // Runtime and Language
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.timer, size: 20),
+                            SizedBox(width: 4),
+                            Text('${widget.movie.runTime} min'),
                           ],
                         ),
+                        Text(
+                            'Language: ${widget.movie.language.toUpperCase()}'),
+                      ],
+                    ),
+                    SizedBox(height: 16),
+
+                    // Trailer Button
+                    if (widget.movie.youtubeTrailerCode.isNotEmpty)
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: () async {
+                            final Uri url = Uri.parse(
+                                'https://www.youtube.com/watch?v=${widget.movie.youtubeTrailerCode}');
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url,
+                                  mode: LaunchMode.externalApplication);
+                            }
+                          },
+                          icon: Icon(Icons.play_arrow,
+                              color: AppColors.secondaryBlackColor),
+                          label: Text('Watch Trailer',
+                              style: AppStyles.textStyle20Bold.copyWith(
+                                  color: AppColors.secondaryBlackColor)),
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: AppColors.kPrimaryColor,
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 16),
+                    SizedBox(height: 16),
 
-                  // Genres
-                  Wrap(
-                    spacing: 8,
-                    children: (movie.genres as List)
-                        .map((genre) => Chip(
-                              label: Text(genre,
-                                  style: AppStyles.textStyle16Regular.copyWith(
-                                      color: AppColors.secondaryBlackColor)),
-                              backgroundColor: Colors.blue[100],
-                            ))
-                        .toList(),
-                  ),
-                  SizedBox(height: 16),
-
-                  // Runtime and Language
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.timer, size: 20),
-                          SizedBox(width: 4),
-                          Text('${movie.runTime} min'),
-                        ],
-                      ),
-                      Text('Language: ${movie.language.toUpperCase()}'),
-                    ],
-                  ),
-                  SizedBox(height: 16),
-
-                  // Trailer Button
-                  if (movie.youtubeTrailerCode.isNotEmpty)
+                    // Visit Site Button
                     SizedBox(
                       width: double.infinity,
-                      child: OutlinedButton.icon(
+                      child: ElevatedButton(
                         onPressed: () async {
-                          final Uri url = Uri.parse(
-                              'https://www.youtube.com/watch?v=${movie.youtubeTrailerCode}');
+                          final Uri url = Uri.parse(widget.movie.url);
                           if (await canLaunchUrl(url)) {
                             await launchUrl(url,
                                 mode: LaunchMode.externalApplication);
                           }
                         },
-                        icon: Icon(Icons.play_arrow,
-                            color: AppColors.secondaryBlackColor),
-                        label: Text('Watch Trailer',
-                            style: AppStyles.textStyle20Bold.copyWith(
-                                color: AppColors.secondaryBlackColor)),
-                        style: OutlinedButton.styleFrom(
+                        style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.kPrimaryColor,
                           padding: EdgeInsets.symmetric(vertical: 12),
                         ),
+                        child: Text(
+                          'Visit Movie Page',
+                          style: AppStyles.textStyle20Bold
+                              .copyWith(color: AppColors.secondaryBlackColor),
+                        ),
                       ),
                     ),
-                  SizedBox(height: 16),
 
-                  // Visit Site Button
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        final Uri url = Uri.parse(movie.url);
-                        if (await canLaunchUrl(url)) {
-                          await launchUrl(url,
-                              mode: LaunchMode.externalApplication);
-                        }
-                      },
-                      child: Text(
-                        'Visit Movie Page',
-                        style: AppStyles.textStyle20Bold
-                            .copyWith(color: AppColors.secondaryBlackColor),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.kPrimaryColor,
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                      ),
+                    16.verticalSpace(),
+
+                    AddMovieToWishListBlocConsumer(
+                      movie: widget.movie,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

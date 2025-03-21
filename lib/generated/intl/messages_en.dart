@@ -90,6 +90,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "login_with_google": MessageLookupByLibrary.simpleMessage(
       "Login With Google",
     ),
+    "movieAddedToWishListSuccessfully": MessageLookupByLibrary.simpleMessage(
+      "Movie added to wishlist successfully",
+    ),
     "name": MessageLookupByLibrary.simpleMessage("Name"),
     "name_is_required": MessageLookupByLibrary.simpleMessage(
       "name is required",

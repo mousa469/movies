@@ -63,7 +63,8 @@
   "weak_password": "كلمة المرور التي تم إدخالها ضعيفة جدًا.",
   "account_exists": "يوجد حساب بالفعل لهذا البريد الإلكتروني.",
   "login_with_facebook":"تسجيل الدخول بواسطة الفيسبوك",
-  "SomethingWentWrong": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+  "SomethingWentWrong": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+  "movieAddedToWishListSuccessfully": "تمت إضافة الفيلم إلى قائمة الرغبات بنجاح"
 
 
     

@@ -559,6 +559,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Movie added to wishlist successfully`
+  String get movieAddedToWishListSuccessfully {
+    return Intl.message(
+      'Movie added to wishlist successfully',
+      name: 'movieAddedToWishListSuccessfully',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

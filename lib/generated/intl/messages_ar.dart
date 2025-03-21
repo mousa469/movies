@@ -90,6 +90,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "login_with_google": MessageLookupByLibrary.simpleMessage(
       "تسجيل الدخول باستخدام جوجل",
     ),
+    "movieAddedToWishListSuccessfully": MessageLookupByLibrary.simpleMessage(
+      "تمت إضافة الفيلم إلى قائمة الرغبات بنجاح",
+    ),
     "name": MessageLookupByLibrary.simpleMessage("الاسم"),
     "name_is_required": MessageLookupByLibrary.simpleMessage("الاسم مطلوب"),
     "next": MessageLookupByLibrary.simpleMessage("التالي"),

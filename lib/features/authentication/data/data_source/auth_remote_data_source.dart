@@ -8,6 +8,7 @@ import 'package:movies/core/services/database_services.dart';
 import 'package:movies/core/services/end_points.dart';
 import 'package:movies/core/services/failure.dart';
 import 'package:movies/core/services/firbase_auth_services.dart';
+import 'package:movies/core/services/shared_prefs.dart';
 import 'package:movies/features/authentication/data/models/user_model.dart';
 import 'package:movies/features/authentication/domain/entites/user_entity.dart';
 
@@ -50,6 +51,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           name: name, email: email, uid: user.uid, phoneNumber: phone);
 
       addUserToDatabase(user: userEntity);
+      SharedPrefs.storeUserInfoInLocalStorage(
+          email: email, uid: user.uid, name: name);
       return right(UserModel.fromFirebase(user: user));
     } on CustomException catch (customEX) {
       if (user != null) {
@@ -93,10 +96,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       UserEntity userEntity = UserModel.fromFirebase(user: user);
       var isExist = await checkIfUserExist(id: userEntity.uid);
       if (!isExist) {
-       await addUserToDatabase(user: userEntity);
+        await addUserToDatabase(user: userEntity);
       } else {
-       await fetchUserData(id: userEntity.uid);
+        await fetchUserData(id: userEntity.uid);
       }
+      SharedPrefs.storeUserInfoInLocalStorage(
+          email: user.email!, uid: user.uid, name: user.displayName ?? "");
+
       return right(UserModel.fromFirebase(user: user));
     } on CustomException catch (e) {
       if (user != null) {
@@ -119,6 +125,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       user = await firebaseAuthServices.signInWithFacebook();
       UserEntity userEntity = UserModel.fromFirebase(user: user);
       addUserToDatabase(user: userEntity);
+      SharedPrefs.storeUserInfoInLocalStorage(
+          email: user.email!, uid: user.uid, name: user.displayName ?? "");
 
       return right(UserModel.fromFirebase(user: user));
     } on CustomException catch (e) {

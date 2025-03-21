@@ -21,7 +21,7 @@ class AvailableMoviesLocalDataSourceImpl
           value: jsonEncode(movies.map((movie) => movie.toJson()).toList()));
     } else {
       log("exception from AvailableMoviesLocalDataSourceImpl.cacheLastAvailableMovies ");
-      throw CachException(errMessage: "list of movies is null");
+      throw CachException(errMessage: "no internet connection");
     }
   }
 

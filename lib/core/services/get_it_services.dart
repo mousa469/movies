@@ -12,11 +12,17 @@ import 'package:movies/features/authentication/domain/use_cases/create_new_user_
 import 'package:movies/features/authentication/domain/use_cases/sign_in_User_use_case.dart';
 import 'package:movies/features/authentication/domain/use_cases/sign_in_with_facebook_use_case.dart';
 import 'package:movies/features/authentication/domain/use_cases/sign_in_with_google_use_case.dart';
+import 'package:movies/features/layout/home/data/datasources/add_movie_to_history_local_data_source.dart';
+import 'package:movies/features/layout/home/data/datasources/add_movie_to_history_remote_data_source.dart';
+import 'package:movies/features/layout/home/data/datasources/add_movie_to_wish_list_local_data_source.dart';
+import 'package:movies/features/layout/home/data/datasources/add_movie_to_wish_list_remote_data_source.dart';
 import 'package:movies/features/layout/home/data/datasources/availabe_movies_remote_data_source.dart';
 import 'package:movies/features/layout/home/data/datasources/available_movies_local_data_source.dart';
 import 'package:movies/features/layout/home/data/datasources/watch_now_movies_local_data_source.dart';
 import 'package:movies/features/layout/home/data/datasources/watch_now_movies_remote_data_source.dart';
 import 'package:movies/features/layout/home/data/repositories/home_repo_impl.dart';
+import 'package:movies/features/layout/home/domain/usecases/add_movie_to_history_use_case.dart';
+import 'package:movies/features/layout/home/domain/usecases/add_movie_to_wish_list_use_case.dart';
 import 'package:movies/features/layout/home/domain/usecases/fetch_available_movies_use_case.dart';
 import 'package:movies/features/layout/home/domain/usecases/fetch_watch_now_movies_use_case.dart';
 
@@ -26,7 +32,8 @@ void setup() {
   getIt.registerSingleton<CreateNewUserUseCase>(CreateNewUserUseCase(
       authRepository: AuthRepositoryImpl(
           authRemoteDataSource: AuthRemoteDataSourceImpl(
-            databaseServices: FirebaseFirestoreService(firebaseFirestore: FirebaseFirestore.instance),
+              databaseServices: FirebaseFirestoreService(
+                  firebaseFirestore: FirebaseFirestore.instance),
               firebaseAuthServices:
                   FirebaseAuthServices(firebaseAuth: FirebaseAuth.instance),
               firebaseFirestore: FirebaseFirestore.instance),
@@ -35,6 +42,68 @@ void setup() {
   getIt.registerSingleton(
     FetchAvailableMoviesUseCase(
       homeRepo: HomeRepoImpl(
+        addMovieToHistoryLocalDataSource:
+            AddMovieToHistoryLocalDataSourceImpl(),
+        addMovieToHistoryRemoteDataSource:
+            AddMovieToHistoryRemoteDataSourceImpl(
+                databaseServices: FirebaseFirestoreService(
+                    firebaseFirestore: FirebaseFirestore.instance)),
+        addMovieToWishListRemoteDataSource:
+            AddMovieToWishListRemoteDataSourceimpl(
+                databaseServices: FirebaseFirestoreService(
+                    firebaseFirestore: FirebaseFirestore.instance)),
+        addMovieToWishListLocalDataSource:
+            AddMovieToWishListLocalDataSourceimpl(),
+        watchNowMoviesLocalDataSource: WatchNowMoviesLocalDataSourceimpl(),
+        wathchNowMoviesRemoteDataSource:
+            WathchNowMoviesRemoteDataSourceimpl(apiService: ApiService(Dio())),
+        availabeMoviesRemoteDataSource: AvailabeMoviesRemoteDataSourceImp(
+          apiService: ApiService(Dio()),
+        ),
+        availableMoviesLocalDataSource: AvailableMoviesLocalDataSourceImpl(),
+      ),
+    ),
+  );
+  getIt.registerSingleton(
+    AddMovieToWishListUseCase(
+      homeRepo: HomeRepoImpl(
+        addMovieToHistoryLocalDataSource:
+            AddMovieToHistoryLocalDataSourceImpl(),
+        addMovieToHistoryRemoteDataSource:
+            AddMovieToHistoryRemoteDataSourceImpl(
+                databaseServices: FirebaseFirestoreService(
+                    firebaseFirestore: FirebaseFirestore.instance)),
+        addMovieToWishListRemoteDataSource:
+            AddMovieToWishListRemoteDataSourceimpl(
+                databaseServices: FirebaseFirestoreService(
+                    firebaseFirestore: FirebaseFirestore.instance)),
+        addMovieToWishListLocalDataSource:
+            AddMovieToWishListLocalDataSourceimpl(),
+        watchNowMoviesLocalDataSource: WatchNowMoviesLocalDataSourceimpl(),
+        wathchNowMoviesRemoteDataSource:
+            WathchNowMoviesRemoteDataSourceimpl(apiService: ApiService(Dio())),
+        availabeMoviesRemoteDataSource: AvailabeMoviesRemoteDataSourceImp(
+          apiService: ApiService(Dio()),
+        ),
+        availableMoviesLocalDataSource: AvailableMoviesLocalDataSourceImpl(),
+      ),
+    ),
+  );
+  getIt.registerSingleton(
+    AddMovieToHistoryUseCase(
+      homeRepo: HomeRepoImpl(
+        addMovieToHistoryLocalDataSource:
+            AddMovieToHistoryLocalDataSourceImpl(),
+        addMovieToHistoryRemoteDataSource:
+            AddMovieToHistoryRemoteDataSourceImpl(
+                databaseServices: FirebaseFirestoreService(
+                    firebaseFirestore: FirebaseFirestore.instance)),
+        addMovieToWishListRemoteDataSource:
+            AddMovieToWishListRemoteDataSourceimpl(
+                databaseServices: FirebaseFirestoreService(
+                    firebaseFirestore: FirebaseFirestore.instance)),
+        addMovieToWishListLocalDataSource:
+            AddMovieToWishListLocalDataSourceimpl(),
         watchNowMoviesLocalDataSource: WatchNowMoviesLocalDataSourceimpl(),
         wathchNowMoviesRemoteDataSource:
             WathchNowMoviesRemoteDataSourceimpl(apiService: ApiService(Dio())),
@@ -48,6 +117,18 @@ void setup() {
   getIt.registerSingleton(
     FetchWatchNowMoviesUseCase(
       homeRepo: HomeRepoImpl(
+        addMovieToHistoryLocalDataSource:
+            AddMovieToHistoryLocalDataSourceImpl(),
+        addMovieToHistoryRemoteDataSource:
+            AddMovieToHistoryRemoteDataSourceImpl(
+                databaseServices: FirebaseFirestoreService(
+                    firebaseFirestore: FirebaseFirestore.instance)),
+        addMovieToWishListRemoteDataSource:
+            AddMovieToWishListRemoteDataSourceimpl(
+                databaseServices: FirebaseFirestoreService(
+                    firebaseFirestore: FirebaseFirestore.instance)),
+        addMovieToWishListLocalDataSource:
+            AddMovieToWishListLocalDataSourceimpl(),
         watchNowMoviesLocalDataSource: WatchNowMoviesLocalDataSourceimpl(),
         wathchNowMoviesRemoteDataSource:
             WathchNowMoviesRemoteDataSourceimpl(apiService: ApiService(Dio())),
@@ -63,7 +144,8 @@ void setup() {
     SignInUserUseCase(
       authRepository: AuthRepositoryImpl(
         authRemoteDataSource: AuthRemoteDataSourceImpl(
-          databaseServices: FirebaseFirestoreService(firebaseFirestore: FirebaseFirestore.instance),
+            databaseServices: FirebaseFirestoreService(
+                firebaseFirestore: FirebaseFirestore.instance),
             firebaseAuthServices:
                 FirebaseAuthServices(firebaseAuth: FirebaseAuth.instance),
             firebaseFirestore: FirebaseFirestore.instance),
@@ -76,7 +158,8 @@ void setup() {
     SignInWithGoogleUseCase(
       authRepository: AuthRepositoryImpl(
         authRemoteDataSource: AuthRemoteDataSourceImpl(
-          databaseServices: FirebaseFirestoreService(firebaseFirestore: FirebaseFirestore.instance),
+            databaseServices: FirebaseFirestoreService(
+                firebaseFirestore: FirebaseFirestore.instance),
             firebaseAuthServices:
                 FirebaseAuthServices(firebaseAuth: FirebaseAuth.instance),
             firebaseFirestore: FirebaseFirestore.instance),
@@ -88,7 +171,8 @@ void setup() {
     SignInWithFacebookUseCase(
       authRepository: AuthRepositoryImpl(
         authRemoteDataSource: AuthRemoteDataSourceImpl(
-          databaseServices: FirebaseFirestoreService(firebaseFirestore: FirebaseFirestore.instance),
+            databaseServices: FirebaseFirestoreService(
+                firebaseFirestore: FirebaseFirestore.instance),
             firebaseAuthServices:
                 FirebaseAuthServices(firebaseAuth: FirebaseAuth.instance),
             firebaseFirestore: FirebaseFirestore.instance),

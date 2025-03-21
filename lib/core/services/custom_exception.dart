@@ -20,3 +20,7 @@ class CachException extends CustomException {
   CachException({required super.errMessage});
   
 } 
+class ServerException extends CustomException {
+  ServerException({required super.errMessage});
+  
+} 

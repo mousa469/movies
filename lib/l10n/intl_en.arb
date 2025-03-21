@@ -63,7 +63,9 @@
   "weak_password": "The password provided is too weak.",
   "account_exists": "The account already exists for that email.",
   "login_with_facebook":" login with facebook",
-  "SomethingWentWrong": "Something went wrong. Please try again."
+  "SomethingWentWrong": "Something went wrong. Please try again.",
+  "movieAddedToWishListSuccessfully": "Movie added to wishlist successfully"
+
 
 
 
