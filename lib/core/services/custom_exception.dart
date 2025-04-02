@@ -16,11 +16,10 @@ class DioCustomException implements Exception {
   DioCustomException({required this.dioException});
 }
 
-class CachException extends CustomException {
-  CachException({required super.errMessage});
-  
-} 
+class CacheException extends CustomException {
+  CacheException({required super.errMessage});
+}
+
 class ServerException extends CustomException {
   ServerException({required super.errMessage});
-  
-} 
+}

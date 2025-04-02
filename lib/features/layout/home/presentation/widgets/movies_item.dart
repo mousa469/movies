@@ -29,9 +29,8 @@ class _MoviesItemState extends State<MoviesItem> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.pushNamed(MovieDetailsView.id, arguments: widget.entity);
-        context
-            .read<AddMovieToHistoryCubit>()
+        context.pushNamed(MovieDetailsView.id, arguments: widget.entity.id);
+        BlocProvider.of<AddMovieToHistoryCubit>(context)
             .addMovieToHistory(movie: widget.entity);
       },
       child: Stack(
@@ -43,7 +42,7 @@ class _MoviesItemState extends State<MoviesItem> {
             width: widget.width,
             child: CachedNetworkImage(
               fit: BoxFit.fill,
-              imageUrl: widget.entity.poster,
+              imageUrl: widget.entity.mediumCoverImage,
               placeholder: (context, url) =>
                   Lottie.asset(Assets.animationsLoadingAnimation),
               errorWidget: (context, url, error) =>

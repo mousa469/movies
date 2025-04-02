@@ -31,7 +31,7 @@ class AvailabeMoviesRemoteDataSourceImp extends AvailabeMoviesRemoteDataSource {
     } catch (e) {
       log("general exception from AvailabeMoviesRemoteDataSourceImp.fetchAvailableMovies and message is : ${e.toString()}  ");
 
-      throw CustomException(errMessage: e.toString());
+        throw CustomException(errMessage: e.toString());
     }
   }
 }

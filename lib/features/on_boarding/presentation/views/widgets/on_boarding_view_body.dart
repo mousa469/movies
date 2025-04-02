@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movies/core/extensions/routing_extension.dart';
-import 'package:movies/core/services/shared_prefs.dart';
+import 'package:movies/core/services/local_storage/hive.dart';
+import 'package:movies/core/services/local_storage/local_storage.dart';
 import 'package:movies/features/authentication/presentation/views/login_view.dart';
 import 'package:movies/features/on_boarding/model/on_boarding_model.dart';
 import 'package:movies/features/on_boarding/presentation/views/widgets/on_boarding_navigator.dart';
@@ -30,7 +31,7 @@ class _OnBoardingViewBodyState extends State<OnBoardingViewBody> {
       }
 
       if (currentIndex == OnBoardingModel.onBoardingList.length - 1) {
-        SharedPrefs.setBool(key: SharedPrefs.isOnBoardingSeenBefore,value:  true);
+        HiveStorage().setBool(key: LocalStorage.isOnBoardingSeenBefore,value:  true);
         context.pushReplacementNamed(LoginView.id);
       }
     });

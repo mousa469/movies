@@ -58,7 +58,7 @@ class FirebaseFirestoreService implements DatabaseServices {
     String? subCollectionName,
     String? subCollectionID,
   }) async {
-    var data;
+    DocumentSnapshot<Map<String, dynamic>> data;
     if (subCollectionName != null && subCollectionID != null) {
       data = await firebaseFirestore
           .collection(path)

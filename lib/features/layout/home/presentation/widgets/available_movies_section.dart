@@ -18,12 +18,12 @@ class _AvailableMoviesSectionState extends State<AvailableMoviesSection> {
   @override
   void initState() {
     super.initState();
-    backImg = widget.movies[0].poster;
+    backImg = widget.movies[0].mediumCoverImage ;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: context.screenHeight(.7),
       child: Stack(
         children: [
@@ -46,7 +46,7 @@ class _AvailableMoviesSectionState extends State<AvailableMoviesSection> {
             movies: widget.movies,
             onIndexChanged: (value) {
               setState(() {
-                backImg = widget.movies[value].poster;
+                backImg = widget.movies[value].mediumCoverImage;
               });
             },
           )

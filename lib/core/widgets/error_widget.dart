@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movies/generated/l10n.dart';
 
 class ErrorMessage extends StatelessWidget {
   const ErrorMessage({super.key, required this.errMessage});

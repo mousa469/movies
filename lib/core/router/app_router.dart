@@ -3,7 +3,6 @@ import 'package:movies/core/widgets/movie_details_view.dart';
 import 'package:movies/features/authentication/presentation/views/login_view.dart';
 import 'package:movies/features/authentication/presentation/views/register.dart';
 import 'package:movies/features/authentication/presentation/views/reset_password_view.dart';
-import 'package:movies/features/layout/home/domain/entities/movie_entity.dart';
 import 'package:movies/features/layout/presentation/views/layout_view.dart';
 import 'package:movies/features/on_boarding/presentation/views/on_boarding_view.dart';
 import 'package:movies/features/splash/presentation/views/splash_view.dart';
@@ -16,7 +15,7 @@ class AppRouter {
       case MovieDetailsView.id:
         return MaterialPageRoute(
             builder: (context) => MovieDetailsView(
-                  movie: settings.arguments as MovieEntity,
+                  movieID: settings.arguments as int,
                 ));
       case OnBoardingView.id:
         return MaterialPageRoute(builder: (context) => OnBoardingView());

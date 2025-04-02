@@ -1,15 +1,13 @@
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:movies/features/authentication/data/models/sign_up_user_request.dart';
-import 'package:movies/features/authentication/data/models/user_model.dart';
 import 'package:movies/features/authentication/domain/entites/user_entity.dart';
 import 'package:movies/features/authentication/domain/use_cases/create_new_user_use_case.dart';
 
 part 'sign_up_state.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
-  SignUpCubit(this.createNewUserUseCase) : super(SignUpInitial()) {}
+  SignUpCubit(this.createNewUserUseCase) : super(SignUpInitial());
 
   CreateNewUserUseCase createNewUserUseCase;
 

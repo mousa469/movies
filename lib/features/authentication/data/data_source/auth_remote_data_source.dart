@@ -8,7 +8,7 @@ import 'package:movies/core/services/database_services.dart';
 import 'package:movies/core/services/end_points.dart';
 import 'package:movies/core/services/failure.dart';
 import 'package:movies/core/services/firbase_auth_services.dart';
-import 'package:movies/core/services/shared_prefs.dart';
+import 'package:movies/core/services/local_storage/local_storage.dart';
 import 'package:movies/features/authentication/data/models/user_model.dart';
 import 'package:movies/features/authentication/domain/entites/user_entity.dart';
 
@@ -32,9 +32,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   FirebaseAuthServices firebaseAuthServices;
   FirebaseFirestore firebaseFirestore;
   DatabaseServices databaseServices;
+  LocalStorage localStorage;
 
   AuthRemoteDataSourceImpl(
-      {required this.firebaseAuthServices,
+
+      {
+        required this.localStorage,
+        required this.firebaseAuthServices,
       required this.firebaseFirestore,
       required this.databaseServices});
   @override
@@ -51,7 +55,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           name: name, email: email, uid: user.uid, phoneNumber: phone);
 
       addUserToDatabase(user: userEntity);
-      SharedPrefs.storeUserInfoInLocalStorage(
+      localStorage.storeUserInfoInLocalStorage(
           email: email, uid: user.uid, name: name);
       return right(UserModel.fromFirebase(user: user));
     } on CustomException catch (customEX) {
@@ -100,7 +104,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       } else {
         await fetchUserData(id: userEntity.uid);
       }
-      SharedPrefs.storeUserInfoInLocalStorage(
+      localStorage.storeUserInfoInLocalStorage(
           email: user.email!, uid: user.uid, name: user.displayName ?? "");
 
       return right(UserModel.fromFirebase(user: user));
@@ -125,7 +129,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       user = await firebaseAuthServices.signInWithFacebook();
       UserEntity userEntity = UserModel.fromFirebase(user: user);
       addUserToDatabase(user: userEntity);
-      SharedPrefs.storeUserInfoInLocalStorage(
+      localStorage.storeUserInfoInLocalStorage(
           email: user.email!, uid: user.uid, name: user.displayName ?? "");
 
       return right(UserModel.fromFirebase(user: user));

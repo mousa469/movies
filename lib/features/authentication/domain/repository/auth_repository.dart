@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:movies/core/services/failure.dart';
-import 'package:movies/features/authentication/data/models/user_model.dart';
 import 'package:movies/features/authentication/domain/entites/user_entity.dart';
 
 abstract class AuthRepository {

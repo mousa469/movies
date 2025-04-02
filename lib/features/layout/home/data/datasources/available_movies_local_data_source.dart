@@ -1,49 +1,76 @@
-import 'dart:convert';
 import 'dart:developer';
-
 import 'package:movies/core/services/custom_exception.dart';
-import 'package:movies/core/services/shared_prefs.dart';
+import 'package:movies/core/services/local_storage/local_storage.dart';
 import 'package:movies/features/layout/home/data/models/movie_model.dart';
 
 abstract class AvailableMoviesLocalDataSource {
-  void cacheLastAvailableMovies({List<MovieModel>? movies});
+  Future<void> cacheLastAvailableMovies({required List<MovieModel> movies});
   Future<List<MovieModel>> fetchAvailableMovies();
 }
 
 class AvailableMoviesLocalDataSourceImpl
     extends AvailableMoviesLocalDataSource {
-  // AvailableMoviesLocalDataSourceImpl({required this.sharedPrefs});
+  final LocalStorage localStorage;
+
+  AvailableMoviesLocalDataSourceImpl({required this.localStorage});
+
   @override
-  void cacheLastAvailableMovies({List<MovieModel>? movies}) {
-    if (movies != null) {
-      SharedPrefs.setString(
-          key: SharedPrefs.lastAvailableMoviesList,
-          value: jsonEncode(movies.map((movie) => movie.toJson()).toList()));
-    } else {
-      log("exception from AvailableMoviesLocalDataSourceImpl.cacheLastAvailableMovies ");
-      throw CachException(errMessage: "no internet connection");
+  Future<void> cacheLastAvailableMovies(
+      {required List<MovieModel> movies}) async {
+    try {
+      if (movies.isNotEmpty) {
+        List<MovieModel>? oldListOfMovies = localStorage.getList<MovieModel>(
+            key: LocalStorage.lastAvailableMoviesList);
+
+        if (!checkEqulity(oldList: oldListOfMovies, newList: movies)) {
+          localStorage.setList<MovieModel>(
+              key: LocalStorage.lastAvailableMoviesList, value: movies);
+        } else {
+          log("oldListOfMovies is null || old list of movies equal new list of movies ");
+        }
+      } else {
+        log(" ----------- No Movies available to cache, list is empty --------------------");
+      }
+    } catch (e) {
+      log(" --------------- Error in cacheLastAvailableMovies: ${e.toString()} ----------------");
     }
   }
 
   @override
   Future<List<MovieModel>> fetchAvailableMovies() async {
-    String? movies =
-        await SharedPrefs.getString(key: SharedPrefs.lastAvailableMoviesList);
+    try {
+      List<MovieModel>? listOfMovies =
+          localStorage.getList(key: LocalStorage.lastAvailableMoviesList);
 
-    if (movies != null) {
-      List<dynamic> decodedMovies = jsonDecode(movies);
-
-      List<MovieModel> movieList = [];
-
-      for (var movie in decodedMovies) {
-        movieList.add(MovieModel.fromJson(movie as Map<String,dynamic>));
+      if (listOfMovies != null && listOfMovies.isNotEmpty) {
+        log("--------------- Movies are not empty and returned successfully ---------------");
+        return listOfMovies;
+      } else {
+        log(" --------------- No movies available in cache. Likely the first time opening the app with no internet. ---------------");
+        throw CacheException(
+            errMessage: "No internet connection, please check your network.");
       }
-
-      return movieList;
-    } else {
-      log("exception from AvailableMoviesLocalDataSourceImpl.fetchAvailableMovies ");
-
-      throw CachException(errMessage: "no internet connection");
+    } catch (e) {
+      log(" --------------- Error in fetchAvailableMovies: ${e.toString()} --------------- ");
+      throw Exception("Error fetching available movies: ${e.toString()}");
     }
+  }
+
+  bool checkEqulity(
+      {required List<MovieModel>? oldList, required List<MovieModel> newList}) {
+    if (oldList == null) {
+      return false;
+    }
+
+    if (oldList.length != newList.length) {
+      return false;
+    }
+    for (int i = 0; i < oldList.length; i++) {
+      if (oldList[i].id != newList[i].id) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }

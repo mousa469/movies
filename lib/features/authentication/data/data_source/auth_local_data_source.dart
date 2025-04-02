@@ -1,25 +1,25 @@
-import 'dart:math';
 
-import 'package:movies/core/services/shared_prefs.dart';
-import 'package:movies/features/authentication/data/models/sign_up_user_request.dart';
-import 'package:movies/features/authentication/data/models/user_model.dart';
-import 'package:movies/features/authentication/domain/entites/user_entity.dart';
+import 'package:movies/core/services/local_storage/local_storage.dart';
+
 
 abstract class AuthLocalDataSource {
-  void createNewUser({required String name, required String email, required String id});
+  void createNewUser(
+      {required String name, required String email, required String id});
 
   void markUserAsRegistered();
 }
 
 class AuthLocalDataSourceImpl extends AuthLocalDataSource {
+  LocalStorage localStorage;
+  AuthLocalDataSourceImpl({required this.localStorage});
   @override
   void createNewUser(
       {required String name, required String email, required String id}) {
-    SharedPrefs.storeUserInfoInLocalStorage(email: email, name: name, uid: id);
+    localStorage.storeUserInfoInLocalStorage(email: email, name: name, uid: id);
   }
 
   @override
   void markUserAsRegistered() {
-    SharedPrefs.markUserIsRegistered();
+    localStorage.markUserIsRegistered();
   }
 }

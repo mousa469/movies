@@ -1,7 +1,7 @@
 import 'package:movies/core/services/custom_exception.dart';
 import 'package:movies/core/services/database_services.dart';
 import 'package:movies/core/services/end_points.dart';
-import 'package:movies/core/services/shared_prefs.dart';
+import 'package:movies/core/services/local_storage/local_storage.dart';
 import 'package:movies/features/layout/home/domain/entities/movie_entity.dart';
 
 abstract class AddMovieToWishListRemoteDataSource {
@@ -10,13 +10,14 @@ abstract class AddMovieToWishListRemoteDataSource {
 
 class AddMovieToWishListRemoteDataSourceimpl
     extends AddMovieToWishListRemoteDataSource {
+  LocalStorage localStorage;
   DatabaseServices databaseServices;
-  AddMovieToWishListRemoteDataSourceimpl({required this.databaseServices});
+  AddMovieToWishListRemoteDataSourceimpl({required this.databaseServices ,required this.localStorage});
   @override
   Future<void> addMovieToWishList({required MovieEntity movie}) async {
     bool isExisted = await databaseServices.checkIfDataExist(
         path: EndPoints.users,
-        id: SharedPrefs.getString(key: SharedPrefs.userID)!,
+        id: localStorage.getString(key: LocalStorage.userID)!,
         subCollectionID: movie.id.toString(),
         subCollectionName: EndPoints.movies);
 
@@ -25,7 +26,7 @@ class AddMovieToWishListRemoteDataSourceimpl
         subCollectionID: movie.id.toString(),
         path: EndPoints.users,
         data: movie.toJson(),
-        id: SharedPrefs.getString(key: SharedPrefs.userID),
+        id: localStorage.getString(key: LocalStorage.userID),
         subCollectionName: EndPoints.movies,
       );
     } else {

@@ -1,57 +1,76 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart';
 import 'package:movies/core/services/custom_exception.dart';
-import 'package:movies/core/services/shared_prefs.dart';
-import 'package:movies/features/authentication/data/models/user_model.dart';
+import 'package:movies/core/services/local_storage/local_storage.dart';
 import 'package:movies/features/layout/home/data/models/movie_model.dart';
 
 abstract class WatchNowMoviesLocalDataSource {
+  Future<void> storeWatchNowMovies({required List<MovieModel> movies});
   Future<List<MovieModel>> fetchWatchNowMovies();
-  Future<void> storeWatchNowMovies(List<MovieModel> movies);
 }
 
-class WatchNowMoviesLocalDataSourceimpl extends WatchNowMoviesLocalDataSource {
+class WatchNowMoviesLocalDataSourceImpl
+    extends WatchNowMoviesLocalDataSource {
+  final LocalStorage localStorage;
+
+  WatchNowMoviesLocalDataSourceImpl({required this.localStorage});
+
   @override
-  Future<void> storeWatchNowMovies(List<MovieModel> movies) async {
+  Future<void> storeWatchNowMovies({required List<MovieModel> movies}) async {
     try {
-      await SharedPrefs.setString(
-          key: SharedPrefs.lastWatchNowMoviesList,
-          value: jsonEncode(movies.map((movie) => movie.toJson()).toList()));
-    } on CachException catch (e) {
-      log("cache exception come from WatchNowMoviesLocalDataSourceimpl.storeWatchNowMovies and message is : ${e.errMessage} ");
-      throw CachException(errMessage: e.errMessage);
-    } catch (e) {
-      log("general exception come from WatchNowMoviesLocalDataSourceimpl.storeWatchNowMovies and message is : ${e.toString()} ");
+      if (movies.isNotEmpty) {
+        List<MovieModel>? oldMoviesList = localStorage.getList<MovieModel>(
+            key: LocalStorage.lastWatchNowMoviesList);
 
-      throw CustomException(errMessage: e.toString());
-    }
-  }
-
-  Future<List<MovieModel>> fetchWatchNowMovies() async {
-    try {
-      var movies =
-          await SharedPrefs.getString(key: SharedPrefs.lastWatchNowMoviesList);
-      List<MovieModel> moviesList = [];
-      if (movies != null) {
-        List<dynamic> moviesDecoded = jsonDecode(movies);
-        for (var element in moviesDecoded) {
-          moviesList.add(MovieModel.fromJson(element as Map<String, dynamic>));
+        if (!checkEquality(oldList: oldMoviesList, newList: movies)) {
+          localStorage.setList<MovieModel>(
+              key: LocalStorage.lastWatchNowMoviesList, value: movies);
+        } else {
+          log("oldMoviesList is null || old movies list equals new movies list");
         }
       } else {
-        throw Exception("no internet connection ");
+        log(" ----------- No Movies available to store, list is empty --------------------");
       }
-      return moviesList;
-    } on CachException catch (e) {
-      log("cache exception come from WatchNowMoviesLocalDataSourceimpl.fetchWatchNowMovies and message is : ${e.errMessage} ");
-
-      throw CachException(errMessage: e.errMessage);
     } catch (e) {
-      log("general exception come from WatchNowMoviesLocalDataSourceimpl.fetchWatchNowMovies and message is : ${e.toString()} ");
-      throw CustomException(errMessage: e.toString());
+      log(" --------------- Error in storeWatchNowMovies: \${e.toString()} ----------------");
     }
   }
+
+  @override
+  Future<List<MovieModel>> fetchWatchNowMovies() async {
+    try {
+      List<MovieModel>? watchNowMovies = localStorage.getList(
+          key: LocalStorage.lastWatchNowMoviesList)!;
+
+      if (watchNowMovies.isNotEmpty) {
+        log("--------------- Movies are not empty and returned successfully ---------------");
+        return watchNowMovies;
+      } else {
+        log(" --------------- No movies available in cache. Likely the first time opening the app with no internet. ---------------");
+        throw CacheException(
+            errMessage: "No internet connection, please check your network.");
+      }
+    } catch (e) {
+      log(" --------------- Error in fetchWatchNowMovies: \${e.toString()} --------------- ");
+      throw Exception("Error fetching watch now movies: \${e.toString()}");
+    }
+  }
+
+  bool checkEquality(
+      {required List<MovieModel>? oldList, required List<MovieModel> newList}) {
+    if (oldList == null) {
+      return false;
+    }
+
+    if (oldList.length != newList.length) {
+      return false;
+    }
+    for (int i = 0; i < oldList.length; i++) {
+      if (oldList[i].id != newList[i].id) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 }
-//  return jsonDecode(movies!)
-//           .map((movie) => MovieModel.fromJson(movie))
-//           .toList() as List<MovieModel>;
