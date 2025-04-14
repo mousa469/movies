@@ -3,6 +3,7 @@ import 'package:movies/features/layout/search/presentation/widgets/search_view_b
 
 class SearchView extends StatelessWidget {
   const SearchView({super.key});
+  static const String id = "SearchView";
 
   @override
   Widget build(BuildContext context) {

@@ -35,10 +35,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   LocalStorage localStorage;
 
   AuthRemoteDataSourceImpl(
-
-      {
-        required this.localStorage,
-        required this.firebaseAuthServices,
+      {required this.localStorage,
+      required this.firebaseAuthServices,
       required this.firebaseFirestore,
       required this.databaseServices});
   @override
@@ -56,7 +54,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       addUserToDatabase(user: userEntity);
       localStorage.storeUserInfoInLocalStorage(
-          email: email, uid: user.uid, name: name);
+        signInMethode:"firebase",
+          email: email,
+          uid: user.uid,
+          name: name,
+          phone: user.phoneNumber ?? "");
       return right(UserModel.fromFirebase(user: user));
     } on CustomException catch (customEX) {
       if (user != null) {
@@ -105,7 +107,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         await fetchUserData(id: userEntity.uid);
       }
       localStorage.storeUserInfoInLocalStorage(
-          email: user.email!, uid: user.uid, name: user.displayName ?? "");
+          email: user.email!,
+          uid: user.uid,
+          name: user.displayName ?? "",
+          phone: user.phoneNumber ?? "",
+          signInMethode: "google",
+          );
 
       return right(UserModel.fromFirebase(user: user));
     } on CustomException catch (e) {
@@ -130,7 +137,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       UserEntity userEntity = UserModel.fromFirebase(user: user);
       addUserToDatabase(user: userEntity);
       localStorage.storeUserInfoInLocalStorage(
-          email: user.email!, uid: user.uid, name: user.displayName ?? "");
+        signInMethode: "facebook",
+          email: user.email!,
+          uid: user.uid,
+          name: user.displayName ?? "",
+          phone: user.phoneNumber ?? "");
 
       return right(UserModel.fromFirebase(user: user));
     } on CustomException catch (e) {

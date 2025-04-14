@@ -26,12 +26,11 @@ class HomeView extends StatelessWidget {
           create: (context) => WatchNowCubit(
               watchNowMoviesUseCase: getIt<FetchWatchNowMoviesUseCase>()),
         ),
- 
         BlocProvider(
           create: (context) => FetchMovieDetailsCubit(
               fetchMovieDetailsUseCase: getIt<FetchMovieDetailsUseCase>()),
         ),
-
+     
       ],
       child: SingleChildScrollView(
         child: Column(

@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:movies/core/services/local_storage/local_storage.dart';
 import 'package:movies/features/layout/home/data/models/movie_model.dart';
 import 'package:movies/features/layout/home/domain/entities/movie_entity.dart';
+import 'package:movies/features/layout/profile/data/models/user_profile_model.dart';
 
 class HiveStorage extends LocalStorage {
   static late Box hiveBox;
@@ -13,6 +14,8 @@ class HiveStorage extends LocalStorage {
 
     Hive.registerAdapter(MovieModelAdapter());
     Hive.registerAdapter(MovieEntityAdapter());
+      Hive.registerAdapter(UserProfileModelAdapter());
+
 
     hiveBox = await Hive.openBox('storageBox');
   }
@@ -74,10 +77,12 @@ class HiveStorage extends LocalStorage {
 
   @override
   void storeUserInfoInLocalStorage(
-      {required String email, required String name, required String uid}) {
+      {required String email, required String name, required String uid ,required String phone,required String signInMethode}) {
     setString(key: LocalStorage.userEmail, value: email);
     setString(key: LocalStorage.userID, value: uid);
     setString(key: LocalStorage.userName, value: name);
+    setString(key: LocalStorage.userPhone, value: phone);
+    setString(key: LocalStorage.signInMethode, value: signInMethode);
     markUserIsRegistered();
   }
 
@@ -92,13 +97,13 @@ class HiveStorage extends LocalStorage {
   }
 
   @override
-  Future<void> setObject({required String key, required dynamic value}) async {
+  Future<void> setObject<T>({required String key, required T value}) async {
     await hiveBox.put(key, value);
   }
 
   @override
-  dynamic getObject({required String key}) {
-    return hiveBox.get(key);
+  T getObject<T>({required String key}) {
+    return hiveBox.get(key) as T;
   }
 
 

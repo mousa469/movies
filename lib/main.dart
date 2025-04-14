@@ -8,8 +8,8 @@ import 'package:movies/core/router/app_router.dart';
 import 'package:movies/core/services/bloc_observer.dart';
 import 'package:movies/core/services/get_it_services.dart';
 import 'package:movies/core/services/local_storage/hive.dart';
-import 'package:movies/core/services/local_storage/local_storage.dart';
 import 'package:movies/core/theme/app_colors.dart';
+import 'package:movies/features/authentication/presentation/views/login_view.dart';
 import 'package:movies/features/layout/home/domain/usecases/add_movie_to_history_use_case.dart';
 import 'package:movies/features/layout/home/domain/usecases/add_movie_to_wish_list_use_case.dart';
 
@@ -19,8 +19,12 @@ import 'package:movies/features/layout/home/presentation/bloc/add_movie_to_histo
 import 'package:movies/features/layout/home/presentation/bloc/add_movie_to_wish_list_cubit/add_movie_to_wishlist_cubit.dart';
 import 'package:movies/features/layout/home/presentation/bloc/fetch_movie_details/fetch_movie_details_cubit.dart';
 import 'package:movies/features/layout/home/presentation/bloc/fetch_similar_movies/fetch_similar_movies_cubit.dart';
+import 'package:movies/features/layout/profile/domain/usecases/fetch_user_data_use_case.dart';
+import 'package:movies/features/layout/profile/domain/usecases/update_user_data_use_case.dart';
+import 'package:movies/features/layout/profile/presentation/bloc/fetch_user_data/fetch_user_data_cubit.dart';
+import 'package:movies/features/layout/profile/presentation/bloc/update_user_data/update_user_data_cubit.dart';
+import 'package:movies/features/layout/search/presentation/views/search_view.dart';
 
-import 'package:movies/features/layout/presentation/views/layout_view.dart';
 import 'package:movies/firebase_options.dart';
 import 'package:movies/generated/l10n.dart';
 
@@ -35,8 +39,7 @@ void main() async {
 
   Bloc.observer = SimpleBlocObserver();
 
-  print(
-      " exist wish list :  ${HiveStorage().getList(key: LocalStorage.wishList)}");
+
 
   runApp(const MyApp());
 }
@@ -63,6 +66,16 @@ class MyApp extends StatelessWidget {
           create: (context) => AddMovieToWishlistCubit(
               addMovieToWishListUseCase: getIt<AddMovieToWishListUseCase>()),
         ),
+          BlocProvider(
+          create: (context) => FetchUserDataCubit(
+              fetchUserDataUseCase:
+                  getIt<FetchUserDataUseCase>()),
+        ),
+          BlocProvider(
+          create: (context) => UpdateUserDataCubit(
+              updateUserDataUseCase:
+                  getIt<UpdateUserDataUseCase>()),
+        ),
       ],
       child: MaterialApp(
         builder: EasyLoading.init(),
@@ -74,7 +87,7 @@ class MyApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: S.delegate.supportedLocales,
-        initialRoute: LayoutView.id,
+        initialRoute: SearchView.id,
         onGenerateRoute: AppRouter.onGenerateRoute,
         locale: Locale("en"),
         title: 'Flutter Demo',

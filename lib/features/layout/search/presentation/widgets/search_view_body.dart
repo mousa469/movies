@@ -13,6 +13,38 @@ class SearchViewBody extends StatelessWidget {
         ],
       ),
     );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     // return SafeArea(
     //   child: Padding(
     //     padding: EdgeInsets.symmetric(horizontal: 16),

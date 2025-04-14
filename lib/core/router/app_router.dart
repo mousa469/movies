@@ -4,6 +4,9 @@ import 'package:movies/features/authentication/presentation/views/login_view.dar
 import 'package:movies/features/authentication/presentation/views/register.dart';
 import 'package:movies/features/authentication/presentation/views/reset_password_view.dart';
 import 'package:movies/features/layout/presentation/views/layout_view.dart';
+import 'package:movies/features/layout/profile/presentation/views/profile_View.dart';
+import 'package:movies/features/layout/profile/presentation/views/update_profile_view.dart';
+import 'package:movies/features/layout/search/presentation/views/search_view.dart';
 import 'package:movies/features/on_boarding/presentation/views/on_boarding_view.dart';
 import 'package:movies/features/splash/presentation/views/splash_view.dart';
 
@@ -21,12 +24,18 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) => OnBoardingView());
       case LoginView.id:
         return MaterialPageRoute(builder: (context) => LoginView());
+      case SearchView.id:
+        return MaterialPageRoute(builder: (context) => SearchView());
       case RegisterView.id:
         return MaterialPageRoute(builder: (context) => RegisterView());
       case ResetPasswordView.id:
         return MaterialPageRoute(builder: (context) => ResetPasswordView());
       case LayoutView.id:
         return MaterialPageRoute(builder: (context) => LayoutView());
+      case ProfileView.id:
+        return MaterialPageRoute(builder: (context) => ProfileView());
+      case UpdateProfileView.id:
+        return MaterialPageRoute(builder: (context) => UpdateProfileView());
       default:
         return MaterialPageRoute(
           builder: (context) => Scaffold(

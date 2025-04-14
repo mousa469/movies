@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:flutter/foundation.dart';
 import 'package:movies/core/services/custom_exception.dart';
 import 'package:movies/core/services/local_storage/local_storage.dart';
 import 'package:movies/features/layout/home/data/models/movie_model.dart';

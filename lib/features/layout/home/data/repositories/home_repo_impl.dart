@@ -144,7 +144,7 @@ Future<Either<Failure, void>> addMovieToWishList(
           serverException = e; // Store the exception to return it later
         } else {
           log("Remote exception: ${e.errMessage}");
-          throw e; // Other errors should still be thrown
+          rethrow; // Other errors should still be thrown
         }
       }
     }

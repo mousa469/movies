@@ -1,8 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
-import 'package:movies/core/assets/app_assets.dart';
 import 'package:movies/core/helper%20functions/custom_snake_bar.dart';
 import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/core/theme/app_styles.dart';
