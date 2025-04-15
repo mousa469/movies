@@ -107,6 +107,7 @@ class HiveStorage extends LocalStorage {
   }
 
 
+  @override
   Future<void> clearAllData() async {
   await hiveBox.clear();
   print("All data in Hive has been cleared.");

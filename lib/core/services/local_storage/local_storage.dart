@@ -12,6 +12,7 @@ abstract class LocalStorage {
   static const String history = "history";
   static const String userPhone = "userPhone";
   static const String signInMethode = "signInMethode";
+  static const String searchedMovies = "searchedMovies";
   static const String numberOfHistoryMovies = "numberOfHistoryMovies";
   static const String numberOfWatchListMovies = "numberOfWatchListMovies";
   Future<void> init();

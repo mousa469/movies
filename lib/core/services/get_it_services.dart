@@ -54,22 +54,42 @@ import 'package:movies/features/layout/profile/domain/usecases/fetch_number_of_w
 import 'package:movies/features/layout/profile/domain/usecases/fetch_user_data_use_case.dart';
 import 'package:movies/features/layout/profile/domain/usecases/log_out_use_case.dart';
 import 'package:movies/features/layout/profile/domain/usecases/update_user_data_use_case.dart';
+import 'package:movies/features/layout/search/data/datasources/search_movie_local_data_source.dart';
+import 'package:movies/features/layout/search/data/datasources/search_movie_remote_data_source.dart';
+import 'package:movies/features/layout/search/data/repositories/search_repo_impl.dart';
+import 'package:movies/features/layout/search/domain/usecases/search_movies_use_case.dart';
 
 final getIt = GetIt.instance;
 
 void setup() {
-  getIt.registerSingleton<CreateNewUserUseCase>(CreateNewUserUseCase(
+  getIt.registerSingleton<CreateNewUserUseCase>(
+    CreateNewUserUseCase(
       authRepository: AuthRepositoryImpl(
-          authRemoteDataSource: AuthRemoteDataSourceImpl(
-              localStorage: HiveStorage(),
-              databaseServices: FirebaseFirestoreService(
-                  firebaseFirestore: FirebaseFirestore.instance),
-              firebaseAuthServices:
-                  FirebaseAuthServices(firebaseAuth: FirebaseAuth.instance),
-              firebaseFirestore: FirebaseFirestore.instance),
-          authLocalDataSource: AuthLocalDataSourceImpl(
+        authRemoteDataSource: AuthRemoteDataSourceImpl(
             localStorage: HiveStorage(),
-          ))));
+            databaseServices: FirebaseFirestoreService(
+                firebaseFirestore: FirebaseFirestore.instance),
+            firebaseAuthServices:
+                FirebaseAuthServices(firebaseAuth: FirebaseAuth.instance),
+            firebaseFirestore: FirebaseFirestore.instance),
+        authLocalDataSource: AuthLocalDataSourceImpl(
+          localStorage: HiveStorage(),
+        ),
+      ),
+    ),
+  );
+  getIt.registerSingleton<SearchMoviesUseCase>(
+    SearchMoviesUseCase(
+      searchRepo: SearchRepoImpl(
+        searchMovieLocalDataSource:
+            SearchMovieLocalDataSourceImpl(localStorage: HiveStorage()),
+        connectivityService: ConnectivityService(),
+        searchMovieRemoteDataSource: SearchMovieRemoteDataSourceImpl(
+          apiService: ApiService(Dio()),
+        ),
+      ),
+    ),
+  );
 
   getIt.registerSingleton(
     FetchAvailableMoviesUseCase(

@@ -1,50 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:movies/core/extensions/padding_extension.dart';
+import 'package:movies/core/widgets/custom_text_form_field.dart';
 
-class SearchViewBody extends StatelessWidget {
+class SearchViewBody extends StatefulWidget {
   const SearchViewBody({super.key});
 
   @override
+  State<SearchViewBody> createState() => _SearchViewBodyState();
+}
+
+class _SearchViewBodyState extends State<SearchViewBody> {
+  TextEditingController searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    searchController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(child: Text("Search view ")),
-        ],
-      ),
-    );
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CustomTextField(
+          controller: searchController,
+          hint: "Search Movie",
+          prefixIcon: Icon(Icons.search),
+        )
+      ],
+    ).symmetricPadding(horizontalValue: 16, verticalValue: 8);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     // return SafeArea(
     //   child: Padding(
     //     padding: EdgeInsets.symmetric(horizontal: 16),
