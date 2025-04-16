@@ -3,6 +3,7 @@ import 'package:movies/core/widgets/movie_details_view.dart';
 import 'package:movies/features/authentication/presentation/views/login_view.dart';
 import 'package:movies/features/authentication/presentation/views/register.dart';
 import 'package:movies/features/authentication/presentation/views/reset_password_view.dart';
+import 'package:movies/features/layout/browse/presentation/views/browse_view.dart';
 import 'package:movies/features/layout/presentation/views/layout_view.dart';
 import 'package:movies/features/layout/profile/presentation/views/profile_View.dart';
 import 'package:movies/features/layout/profile/presentation/views/update_profile_view.dart';
@@ -26,6 +27,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) => LoginView());
       case SearchView.id:
         return MaterialPageRoute(builder: (context) => SearchView());
+      case BrowseView.id:
+        return MaterialPageRoute(builder: (context) => BrowseView());
       case RegisterView.id:
         return MaterialPageRoute(builder: (context) => RegisterView());
       case ResetPasswordView.id:

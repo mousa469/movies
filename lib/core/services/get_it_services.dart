@@ -16,6 +16,10 @@ import 'package:movies/features/authentication/domain/use_cases/create_new_user_
 import 'package:movies/features/authentication/domain/use_cases/sign_in_User_use_case.dart';
 import 'package:movies/features/authentication/domain/use_cases/sign_in_with_facebook_use_case.dart';
 import 'package:movies/features/authentication/domain/use_cases/sign_in_with_google_use_case.dart';
+import 'package:movies/features/layout/browse/data/datasources/browse_movie_by_category_local_data_source.dart';
+import 'package:movies/features/layout/browse/data/datasources/browse_movie_by_category_remote_data_source.dart';
+import 'package:movies/features/layout/browse/data/repositories/browse_repo_impl.dart';
+import 'package:movies/features/layout/browse/domain/usecases/browse_item_by_category_use_case.dart';
 import 'package:movies/features/layout/home/data/datasources/add_movie_to_history_local_data_source.dart';
 import 'package:movies/features/layout/home/data/datasources/add_movie_to_history_remote_data_source.dart';
 import 'package:movies/features/layout/home/data/datasources/add_movie_to_wish_list_local_data_source.dart';
@@ -89,6 +93,17 @@ void setup() {
         ),
       ),
     ),
+  );
+  getIt.registerSingleton<BrowseMovieByCategoryUseCase>(
+    BrowseMovieByCategoryUseCase(
+        repo: BrowseRepoImpl(
+            connectivityService: ConnectivityService(),
+            browseMovieByCategoryRemoteDataSource:
+                BrowseMovieByCategoryRemoteDataSourceImpl(
+                    apiService: ApiService(Dio())),
+            browseMovieByCategoryLocalDataSource:
+                BrowseMovieByCategoryLocalDataSourceImpl(
+                    localStorage: HiveStorage()))),
   );
 
   getIt.registerSingleton(

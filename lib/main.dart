@@ -9,6 +9,7 @@ import 'package:movies/core/services/bloc_observer.dart';
 import 'package:movies/core/services/get_it_services.dart';
 import 'package:movies/core/services/local_storage/hive.dart';
 import 'package:movies/core/theme/app_colors.dart';
+import 'package:movies/features/layout/browse/presentation/views/browse_view.dart';
 import 'package:movies/features/layout/home/domain/usecases/add_movie_to_history_use_case.dart';
 import 'package:movies/features/layout/home/domain/usecases/add_movie_to_wish_list_use_case.dart';
 

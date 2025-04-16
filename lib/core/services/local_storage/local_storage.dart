@@ -5,6 +5,7 @@ abstract class LocalStorage {
   static const String userName = "userName";
   static const String userID = "userID";
   static const String userInfo = "userInfo";
+  static const String movieCategory = "movieCategory";
   static const String isLoginedBefore = "isLoginedBefore";
   static const String lastAvailableMoviesList = "lastMoviesList";
   static const String lastWatchNowMoviesList = "lastWatchNowMoviesList";
