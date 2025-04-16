@@ -18,30 +18,45 @@ class MoviesCategoryGridViewBuilder extends StatelessWidget {
         BrowseMoviesByCategoryState>(
       builder: (context, state) {
         if (state is BrowseMoviesByCategoryFailure) {
-          return Expanded(child: ErrorMessage(errMessage: state.errMessage));
+          return SliverToBoxAdapter(
+            child: ErrorMessage(errMessage: state.errMessage),
+          );
         } else if (state is BrowseMoviesByCategorySuccess) {
-          return state.movies.isEmpty
-              ? Center(child: Text("No Movies Available"))
-              : Expanded(
-                  child: GridView.builder(
-                    padding: EdgeInsets.only(right: 16),
-                    itemCount: state.movies.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                    ),
-                    itemBuilder: (context, index) {
-                      return MoviesItem(
-                          entity: state.movies[index],
-                          height: context.screenHeight(.3),
-                          width: context.screenWidth(.5));
-                    },
-                  ),
-                );
+          if (state.movies.isEmpty) {
+            return SliverToBoxAdapter(
+              child: Center(child: Text("No Movies Available")),
+            );
+          }
+          return SliverPadding(
+            padding: const EdgeInsets.only(right: 16),
+            sliver: SliverGrid(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final movie = state.movies[index];
+                  return MoviesItem(
+                    entity: movie,
+                    height: context.screenHeight(.3),
+                    width: context.screenWidth(.5),
+                  );
+                },
+                childCount: state.movies.length,
+              ),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+            ),
+          );
         } else {
-          return Expanded(
-              child: Lottie.asset(Assets.animationsLoadingAnimation));
+          return SliverToBoxAdapter(
+            child: SizedBox(
+              height: context.screenHeight(.5),
+              child: Center(
+                child: Lottie.asset(Assets.animationsLoadingAnimation),
+              ),
+            ),
+          );
         }
       },
     );
