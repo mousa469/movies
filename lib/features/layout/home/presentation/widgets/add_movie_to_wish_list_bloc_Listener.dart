@@ -1,13 +1,13 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies/constants.dart';
 import 'package:movies/core/helper%20functions/custom_snake_bar.dart';
 import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/core/theme/app_styles.dart';
 import 'package:movies/core/widgets/custom_button.dart';
 import 'package:movies/features/layout/home/domain/entities/movie_entity.dart';
 import 'package:movies/features/layout/home/presentation/bloc/add_movie_to_wish_list_cubit/add_movie_to_wishlist_cubit.dart';
-import 'package:movies/generated/l10n.dart';
 
 class AddMovieToWishListBlocListener extends StatelessWidget {
   const AddMovieToWishListBlocListener({super.key, required this.movie});
@@ -21,15 +21,15 @@ class AddMovieToWishListBlocListener extends StatelessWidget {
         if (state is AddMovieToWishlistFailure) {
           showAwesomeSnackBar(
               context: context,
-              title: S.of(context).Opps,
+              title: opps,
               message: state.errMessage,
               contentType: ContentType.failure);
         }
         if (state is AddMovieToWishlistSuccess) {
           showAwesomeSnackBar(
               context: context,
-              title: S.of(context).congratualtions,
-              message: S.of(context).movieAddedToWishListSuccessfully,
+              title: congratualtions,
+              message: movieAddedToWishListSuccessfully,
               contentType: ContentType.success);
         }
       },

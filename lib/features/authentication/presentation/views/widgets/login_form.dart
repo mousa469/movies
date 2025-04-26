@@ -1,6 +1,7 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies/constants.dart';
 import 'package:movies/core/assets/app_assets.dart';
 import 'package:movies/core/extensions/routing_extension.dart';
 import 'package:movies/core/extensions/space_extension.dart';
@@ -15,7 +16,6 @@ import 'package:movies/features/authentication/presentation/views/register.dart'
 import 'package:movies/features/authentication/presentation/views/reset_password_view.dart';
 import 'package:movies/features/authentication/presentation/views/widgets/custom_text_button.dart';
 import 'package:movies/features/layout/presentation/views/layout_view.dart';
-import 'package:movies/generated/l10n.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -48,8 +48,8 @@ class _LoginFormState extends State<LoginForm> {
           CustomEasyLoading.hideLoading();
           showAwesomeSnackBar(
               context: context,
-              title: S.of(context).congratualtions,
-              message: S.of(context).sign_in_successfully,
+              title: congratualtions,
+              message: signInSuccessfully,
               contentType: ContentType.success);
           context.pushAndRemoveUntil(
             LayoutView.id,
@@ -60,7 +60,7 @@ class _LoginFormState extends State<LoginForm> {
           CustomEasyLoading.hideLoading();
           showAwesomeSnackBar(
               context: context,
-              title: S.of(context).Opps,
+              title: opps,
               message: state.errMessage,
               contentType: ContentType.failure);
         }
@@ -73,7 +73,7 @@ class _LoginFormState extends State<LoginForm> {
             CustomTextField(
               onValidate: (value) {
                 if (value == null || value.isEmpty) {
-                  return S.of(context).email_address_is_required;
+                  return emailAddressIsRequired;
                 }
                 return null;
               },
@@ -82,14 +82,14 @@ class _LoginFormState extends State<LoginForm> {
                 Icons.email,
                 color: AppColors.whiteColor,
               ),
-              hint: S.of(context).email,
+              hint: email,
               hintColor: AppColors.whiteColor,
             ),
             20.verticalSpace(),
             CustomTextField(
               onValidate: (value) {
                 if (value == null || value.isEmpty) {
-                  return S.of(context).password_is_required;
+                  return passwordIsRequired;
                 }
                 return null;
               },
@@ -98,14 +98,14 @@ class _LoginFormState extends State<LoginForm> {
                 Icons.lock,
                 color: AppColors.whiteColor,
               ),
-              hint: S.of(context).password,
+              hint: password,
               hintColor: AppColors.whiteColor,
               isPassword: true,
             ),
             Align(
               alignment: Alignment.centerRight,
               child: CustomTextButton(
-                text: S.of(context).forget_password_question,
+                text: forgetPasswordQuestion,
                 onPress: () {
                   context.pushNamed(ResetPasswordView.id);
                 },
@@ -115,7 +115,7 @@ class _LoginFormState extends State<LoginForm> {
             CustomElevatedButton(
               color: AppColors.kPrimaryColor,
               child: Text(
-                S.of(context).login,
+                login,
                 style: AppStyles.textStyle16Regular
                     .copyWith(color: AppColors.secondaryBlackColor),
               ),
@@ -132,14 +132,14 @@ class _LoginFormState extends State<LoginForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  S.of(context).dont_have_account_question,
+                  dontHaveAccountQuestion,
                   style: AppStyles.textStyle16Regular.copyWith(
                     color: AppColors.whiteColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 CustomTextButton(
-                  text: S.of(context).create_account,
+                  text: createAccount,
                   onPress: () {
                     context.pushNamed(RegisterView.id);
                   },
@@ -158,7 +158,7 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                 ),
                 Text(
-                  S.of(context).or,
+                  or,
                   style: AppStyles.textStyle16Regular
                       .copyWith(color: AppColors.kPrimaryColor),
                 ),
@@ -190,7 +190,7 @@ class _LoginFormState extends State<LoginForm> {
                   Text(
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    S.of(context).login_with_google,
+                    loginWithGoogle,
                     style: AppStyles.textStyle20RegularAuto.copyWith(
                       color: AppColors.secondaryBlackColor,
                     ),
@@ -199,7 +199,6 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             8.verticalSpace(),
-
 
             CustomElevatedButton(
               onPressed: () {
@@ -218,7 +217,7 @@ class _LoginFormState extends State<LoginForm> {
                   Text(
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    S.of(context).login_with_facebook,
+                    loginWithFacebook,
                     style: AppStyles.textStyle20RegularAuto.copyWith(
                       color: AppColors.secondaryBlackColor,
                     ),

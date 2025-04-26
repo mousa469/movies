@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movies/constants.dart';
 import 'package:movies/core/assets/app_assets.dart';
 import 'package:movies/core/extensions/media_query_extension.dart';
 import 'package:movies/core/extensions/space_extension.dart';
@@ -6,7 +7,6 @@ import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/core/theme/app_styles.dart';
 import 'package:movies/core/widgets/custom_button.dart';
 import 'package:movies/core/widgets/custom_text_form_field.dart';
-import 'package:movies/generated/l10n.dart';
 
 class ResetPasswordViewBody extends StatefulWidget {
   const ResetPasswordViewBody({super.key});
@@ -37,7 +37,7 @@ class _ResetPasswordViewBodyState extends State<ResetPasswordViewBody> {
                   CustomTextField(
                     onValidate: (value) {
                       if (value == value || value!.isEmpty) {
-                        return S.of(context).email_address_is_required;
+                        return emailAddressIsRequired;
                       }
                       return null;
                     },
@@ -51,7 +51,7 @@ class _ResetPasswordViewBodyState extends State<ResetPasswordViewBody> {
                   CustomElevatedButton(
                       color: AppColors.kPrimaryColor,
                       child: Text(
-                        S.of(context).verify_email,
+                        verifyEmail,
                         style: AppStyles.textStyle20Regular
                             .copyWith(color: AppColors.secondaryBlackColor),
                       ),

@@ -1,6 +1,7 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies/constants.dart';
 import 'package:movies/core/extensions/routing_extension.dart';
 import 'package:movies/core/extensions/space_extension.dart';
 import 'package:movies/core/helper%20functions/custom_easy_loading.dart';
@@ -10,7 +11,6 @@ import 'package:movies/core/theme/app_styles.dart';
 import 'package:movies/core/widgets/custom_button.dart';
 import 'package:movies/core/widgets/custom_text_form_field.dart';
 import 'package:movies/features/authentication/presentation/sign_up_cubit/sign_up_cubit.dart';
-import 'package:movies/generated/l10n.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -49,8 +49,8 @@ class _RegisterFormState extends State<RegisterForm> {
           showAwesomeSnackBar(
             contentType: ContentType.success,
             context: context,
-            message: S.of(context).registered_successfully,
-            title: S.of(context).congratualtions,
+            message: registeredSuccessfully,
+            title: congratualtions,
           );
           context.pop();
         }
@@ -61,7 +61,7 @@ class _RegisterFormState extends State<RegisterForm> {
             contentType: ContentType.failure,
             context: context,
             message: state.errMessage,
-            title: S.of(context).Opps,
+            title:opps,
           );
         }
       },
@@ -73,7 +73,7 @@ class _RegisterFormState extends State<RegisterForm> {
             CustomTextField(
               onValidate: (value) {
                 if (value == null || value.isEmpty) {
-                  return S.of(context).name_is_required;
+                  return nameIsRequired;
                 }
                 return null;
               },
@@ -82,14 +82,14 @@ class _RegisterFormState extends State<RegisterForm> {
                 Icons.person,
                 color: AppColors.whiteColor,
               ),
-              hint: S.of(context).name,
+              hint: name,
               hintColor: AppColors.whiteColor,
             ),
             20.verticalSpace(),
             CustomTextField(
               onValidate: (value) {
                 if (value == null || value.isEmpty) {
-                  return S.of(context).email_address_is_required;
+                  return emailAddressIsRequired;
                 }
                 return null;
               },
@@ -98,14 +98,14 @@ class _RegisterFormState extends State<RegisterForm> {
                 Icons.email,
                 color: AppColors.whiteColor,
               ),
-              hint: S.of(context).email,
+              hint: email,
               hintColor: AppColors.whiteColor,
             ),
             20.verticalSpace(),
             CustomTextField(
               onValidate: (value) {
                 if (value == null || value.isEmpty) {
-                  return S.of(context).password_is_required;
+                  return passwordIsRequired;
                 }
                 return null;
               },
@@ -114,7 +114,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 Icons.lock,
                 color: AppColors.whiteColor,
               ),
-              hint: S.of(context).password,
+              hint: password,
               hintColor: AppColors.whiteColor,
               isPassword: true,
             ),
@@ -123,7 +123,7 @@ class _RegisterFormState extends State<RegisterForm> {
             CustomTextField(
               onValidate: (value) {
                 if (value == null || value.isEmpty) {
-                  return S.of(context).confirm_password;
+                  return confirmPassword;
                 }
                 return null;
               },
@@ -132,7 +132,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 Icons.lock,
                 color: AppColors.whiteColor,
               ),
-              hint: S.of(context).password,
+              hint: password,
               hintColor: AppColors.whiteColor,
               isPassword: true,
             ),
@@ -141,7 +141,7 @@ class _RegisterFormState extends State<RegisterForm> {
             CustomTextField(
               onValidate: (value) {
                 if (value == null || value.isEmpty) {
-                  return S.of(context).phone_number_is_required;
+                  return phoneNumberIsRequired;
                 }
                 return null;
               },
@@ -150,7 +150,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 Icons.lock,
                 color: AppColors.whiteColor,
               ),
-              hint: S.of(context).phone_number,
+              hint: phoneNumber,
               hintColor: AppColors.whiteColor,
             ),
             // 5.verticalSpace(),
@@ -158,7 +158,7 @@ class _RegisterFormState extends State<RegisterForm> {
             CustomElevatedButton(
               color: AppColors.kPrimaryColor,
               child: Text(
-                S.of(context).create_account,
+                createAccount,
                 style: AppStyles.textStyle20Regular
                     .copyWith(color: AppColors.secondaryBlackColor),
               ),
@@ -173,8 +173,8 @@ class _RegisterFormState extends State<RegisterForm> {
                   } else {
                     showAwesomeSnackBar(
                         context: context,
-                        title: S.of(context).warning,
-                        message: S.of(context).password_mismatch,
+                        title:warning,
+                        message: passwordMismatch,
                         contentType: ContentType.warning);
                   }
                 }
@@ -186,7 +186,7 @@ class _RegisterFormState extends State<RegisterForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  S.of(context).already_have_account_question,
+                  alreadyHaveAccountQuestion,
                   style: AppStyles.textStyle16Regular
                       .copyWith(fontWeight: FontWeight.w600),
                 ),
@@ -195,7 +195,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     context.pop();
                   },
                   child: Text(
-                    S.of(context).login,
+                    login,
                     style: AppStyles.textStyle16Regular.copyWith(
                         decoration: TextDecoration.underline,
                         decorationColor: AppColors.kPrimaryColor,

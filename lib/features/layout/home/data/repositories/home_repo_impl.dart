@@ -4,16 +4,8 @@ import 'package:dartz/dartz.dart';
 import 'package:movies/core/services/custom_exception.dart';
 import 'package:movies/core/services/failure.dart';
 import 'package:movies/core/services/network_checker.dart';
-import 'package:movies/features/layout/home/data/datasources/add_movie_to_history_local_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/add_movie_to_history_remote_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/add_movie_to_wish_list_local_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/add_movie_to_wish_list_remote_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/availabe_movies_remote_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/available_movies_local_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/fetch_similar_movies_remote_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/movie_details_remote_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/watch_now_movies_local_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/watch_now_movies_remote_data_source.dart';
+import 'package:movies/features/layout/home/data/datasources/home_local_data_source.dart';
+import 'package:movies/features/layout/home/data/datasources/home_remote_data_source.dart';
 import 'package:movies/features/layout/home/data/models/movie_details_model.dart';
 import 'package:movies/features/layout/home/data/models/movie_model.dart';
 import 'package:movies/features/layout/home/domain/entities/movie_details_entity.dart';
@@ -21,30 +13,15 @@ import 'package:movies/features/layout/home/domain/entities/movie_entity.dart';
 import 'package:movies/features/layout/home/domain/repositories/home_repo.dart';
 
 class HomeRepoImpl extends HomeRepo {
-  AvailabeMoviesRemoteDataSource availabeMoviesRemoteDataSource;
-  AvailableMoviesLocalDataSource availableMoviesLocalDataSource;
-  WatchNowMoviesLocalDataSource watchNowMoviesLocalDataSource;
-  WathchNowMoviesRemoteDataSource wathchNowMoviesRemoteDataSource;
-  AddMovieToWishListLocalDataSource addMovieToWishListLocalDataSource;
-  AddMovieToWishListRemoteDataSource addMovieToWishListRemoteDataSource;
-  AddMovieToHistoryLocalDataSource addMovieToHistoryLocalDataSource;
-  AddMovieToHistoryRemoteDataSource addMovieToHistoryRemoteDataSource;
-  MovieDetailsRemoteDataSource movieDetailsRemoteDataSource;
-  FetchSimilarMoviesRemoteDataSource fetchSimilarMoviesRemoteDataSource;
   ConnectivityService connectivityService;
+  HomeRemoteDataSource homeRemoteDataSource;
+  HomeLocalDataSource homeLocalDataSource;
 
-  HomeRepoImpl(
-      {required this.connectivityService,
-      required this.fetchSimilarMoviesRemoteDataSource,
-      required this.movieDetailsRemoteDataSource,
-      required this.addMovieToHistoryLocalDataSource,
-      required this.addMovieToHistoryRemoteDataSource,
-      required this.addMovieToWishListLocalDataSource,
-      required this.addMovieToWishListRemoteDataSource,
-      required this.availabeMoviesRemoteDataSource,
-      required this.availableMoviesLocalDataSource,
-      required this.watchNowMoviesLocalDataSource,
-      required this.wathchNowMoviesRemoteDataSource});
+  HomeRepoImpl({
+    required this.homeLocalDataSource,
+    required this.homeRemoteDataSource,
+    required this.connectivityService,
+  });
   @override
   Future<Either<Failure, List<MovieEntity>>> fetchAvailableMovies() async {
     bool hasInternetConnection =
@@ -55,14 +32,14 @@ class HomeRepoImpl extends HomeRepo {
     try {
       if (hasInternetConnection) {
         List<MovieModel> movies =
-            await availabeMoviesRemoteDataSource.fetchAvailableMovies();
+            await homeRemoteDataSource.fetchAvailableMovies();
 
-        await availableMoviesLocalDataSource.cacheLastAvailableMovies(
+        await homeLocalDataSource.cacheLastAvailableMovies(
             movies: movies);
         return right(movies.map<MovieEntity>((movie) => movie).toList());
       } else {
         List<MovieModel> movies =
-            await availableMoviesLocalDataSource.fetchAvailableMovies();
+            await homeLocalDataSource.fetchAvailableMovies();
         log("available movies fetched successfully : $movies");
 
         return right(movies);
@@ -98,13 +75,13 @@ class HomeRepoImpl extends HomeRepo {
     try {
       if (hasInternetConnection) {
         List<MovieModel> movies =
-            await wathchNowMoviesRemoteDataSource.fetchWatchNowMovies();
+            await homeRemoteDataSource.fetchWatchNowMovies();
 
-        watchNowMoviesLocalDataSource.storeWatchNowMovies(movies: movies);
+        homeLocalDataSource.storeWatchNowMovies(movies: movies);
         return right(movies.map<MovieEntity>((movie) => movie).toList());
       } else {
         List<MovieModel> movies =
-            await watchNowMoviesLocalDataSource.fetchWatchNowMovies();
+            await homeLocalDataSource.fetchWatchNowMovies();
         log("watch now movies fetched successfully : $movies");
         return right(movies.map<MovieEntity>((movie) => movie).toList());
       }
@@ -127,47 +104,48 @@ class HomeRepoImpl extends HomeRepo {
   }
 
   @override
-Future<Either<Failure, void>> addMovieToWishList(
-    {required MovieEntity movie}) async {
-  try {
-    bool hasInternetConnection =
-        await connectivityService.hasInternetConnection();
-    
-    ServerException? serverException;
+  Future<Either<Failure, void>> addMovieToWishList(
+      {required MovieEntity movie}) async {
+    try {
+      bool hasInternetConnection =
+          await connectivityService.hasInternetConnection();
 
-    if (hasInternetConnection) {
-      try {
-        await addMovieToWishListRemoteDataSource.addMovieToWishList(movie: movie);
-      } on ServerException catch (e) {
-        if (e.errMessage == "Movie is already exist in the wishlist") {
-          log("Movie already exists, skipping remote but adding locally.");
-          serverException = e; // Store the exception to return it later
-        } else {
-          log("Remote exception: ${e.errMessage}");
-          rethrow; // Other errors should still be thrown
+      ServerException? serverException;
+
+      if (hasInternetConnection) {
+        try {
+          await homeRemoteDataSource.addMovieToWishList(
+              movie: movie);
+        } on ServerException catch (e) {
+          if (e.errMessage == "Movie is already exist in the wishlist") {
+            log("Movie already exists, skipping remote but adding locally.");
+            serverException = e; // Store the exception to return it later
+          } else {
+            log("Remote exception: ${e.errMessage}");
+            rethrow; // Other errors should still be thrown
+          }
         }
       }
+
+      await homeLocalDataSource.addMovieToWishList(movie: movie);
+
+      // If we caught the "already exists" exception, return it to the UI
+      if (serverException != null) {
+        return Left(ServerFailure(errMessage: serverException.errMessage));
+      }
+
+      return Right(null);
+    } on CacheException catch (e) {
+      log("Cache exception: ${e.errMessage}");
+      return Left(CacheFailure(errMessage: e.errMessage));
+    } on ServerException catch (e) {
+      log("Server exception: ${e.errMessage}");
+      return Left(ServerFailure(errMessage: e.errMessage));
+    } catch (e) {
+      log("General exception: ${e.toString()}");
+      return Left(Failure(errMessage: e.toString()));
     }
-
-    await addMovieToWishListLocalDataSource.addMovieToWishList(movie: movie);
-
-    // If we caught the "already exists" exception, return it to the UI
-    if (serverException != null) {
-      return Left(ServerFailure(errMessage: serverException.errMessage));
-    }
-
-    return Right(null);
-  } on CacheException catch (e) {
-    log("Cache exception: ${e.errMessage}");
-    return Left(CacheFailure(errMessage: e.errMessage));
-  } on ServerException catch (e) {
-    log("Server exception: ${e.errMessage}");
-    return Left(ServerFailure(errMessage: e.errMessage));
-  } catch (e) {
-    log("General exception: ${e.toString()}");
-    return Left(Failure(errMessage: e.toString()));
   }
-}
 
   @override
   Future<Either<Failure, void>> addMovieToHistory(
@@ -176,9 +154,9 @@ Future<Either<Failure, void>> addMovieToWishList(
       bool hasInternetConnection =
           await connectivityService.hasInternetConnection();
       if (hasInternetConnection) {
-        await addMovieToHistoryRemoteDataSource.addMovieToHistory(movie: movie);
+        await homeRemoteDataSource.addMovieToHistory(movie: movie);
       } else {
-        addMovieToHistoryLocalDataSource.addMovieToHistory(movie: movie);
+        homeLocalDataSource.addMovieToHistory(movie: movie);
       }
       return Right(null);
     } on CacheException catch (e) {
@@ -203,7 +181,7 @@ Future<Either<Failure, void>> addMovieToWishList(
           await connectivityService.hasInternetConnection();
 
       if (hasInternetConnection) {
-        MovieDetailsModel movieDetailsModel = await movieDetailsRemoteDataSource
+        MovieDetailsModel movieDetailsModel = await homeRemoteDataSource
             .fetchMovieDetails(movieID: movieID);
         return Right(movieDetailsModel);
       } else {
@@ -231,7 +209,7 @@ Future<Either<Failure, void>> addMovieToWishList(
       {required int id}) async {
     try {
       List<MovieModel> movies =
-          await fetchSimilarMoviesRemoteDataSource.fetchSimilarMovies(id: id);
+          await homeRemoteDataSource.fetchSimilarMovies(id: id);
       return Right(movies);
     } on DioCustomException catch (e) {
       return Left(DioFailure.fromDio(e.dioException));

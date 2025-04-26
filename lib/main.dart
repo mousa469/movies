@@ -2,14 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:movies/core/helper%20functions/custom_easy_loading.dart';
 import 'package:movies/core/router/app_router.dart';
 import 'package:movies/core/services/bloc_observer.dart';
 import 'package:movies/core/services/get_it_services.dart';
 import 'package:movies/core/services/local_storage/hive.dart';
 import 'package:movies/core/theme/app_colors.dart';
-import 'package:movies/features/layout/browse/presentation/views/browse_view.dart';
 import 'package:movies/features/layout/home/domain/usecases/add_movie_to_history_use_case.dart';
 import 'package:movies/features/layout/home/domain/usecases/add_movie_to_wish_list_use_case.dart';
 
@@ -24,10 +22,8 @@ import 'package:movies/features/layout/profile/domain/usecases/fetch_user_data_u
 import 'package:movies/features/layout/profile/domain/usecases/update_user_data_use_case.dart';
 import 'package:movies/features/layout/profile/presentation/bloc/fetch_user_data/fetch_user_data_cubit.dart';
 import 'package:movies/features/layout/profile/presentation/bloc/update_user_data/update_user_data_cubit.dart';
-import 'package:movies/features/layout/search/presentation/views/search_view.dart';
 
 import 'package:movies/firebase_options.dart';
-import 'package:movies/generated/l10n.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,13 +73,6 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         builder: EasyLoading.init(),
         debugShowCheckedModeBanner: false,
-        localizationsDelegates: [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: S.delegate.supportedLocales,
         initialRoute: LayoutView.id,
         onGenerateRoute: AppRouter.onGenerateRoute,
         locale: Locale("en"),

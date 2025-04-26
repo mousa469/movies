@@ -20,16 +20,8 @@ import 'package:movies/features/layout/browse/data/datasources/browse_movie_by_c
 import 'package:movies/features/layout/browse/data/datasources/browse_movie_by_category_remote_data_source.dart';
 import 'package:movies/features/layout/browse/data/repositories/browse_repo_impl.dart';
 import 'package:movies/features/layout/browse/domain/usecases/browse_item_by_category_use_case.dart';
-import 'package:movies/features/layout/home/data/datasources/add_movie_to_history_local_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/add_movie_to_history_remote_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/add_movie_to_wish_list_local_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/add_movie_to_wish_list_remote_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/availabe_movies_remote_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/available_movies_local_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/fetch_similar_movies_remote_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/movie_details_remote_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/watch_now_movies_local_data_source.dart';
-import 'package:movies/features/layout/home/data/datasources/watch_now_movies_remote_data_source.dart';
+import 'package:movies/features/layout/home/data/datasources/home_local_data_source.dart';
+import 'package:movies/features/layout/home/data/datasources/home_remote_data_source.dart';
 import 'package:movies/features/layout/home/data/repositories/home_repo_impl.dart';
 import 'package:movies/features/layout/home/domain/usecases/add_movie_to_history_use_case.dart';
 import 'package:movies/features/layout/home/domain/usecases/add_movie_to_wish_list_use_case.dart';
@@ -37,19 +29,8 @@ import 'package:movies/features/layout/home/domain/usecases/fetch_available_movi
 import 'package:movies/features/layout/home/domain/usecases/fetch_movie_details_use_case.dart';
 import 'package:movies/features/layout/home/domain/usecases/fetch_similar_movies_use_case.dart';
 import 'package:movies/features/layout/home/domain/usecases/fetch_watch_now_movies_use_case.dart';
-import 'package:movies/features/layout/profile/data/datasources/fetch_list_of_movies_in_history.dart';
-import 'package:movies/features/layout/profile/data/datasources/fetch_list_of_movies_in_history_local_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/fetch_list_of_movies_in_watch_list_local_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/fetch_list_of_movies_in_watch_list_remote_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/fetch_number_of_movies_in_history_remote_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/fetch_number_of_movies_in_watch_list_remote_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/fetch_user_data_local_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/fetch_user_data_remote_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/log_out_remote_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/number_of_movies_in_history_local_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/number_of_movies_of_watch_list.dart';
-import 'package:movies/features/layout/profile/data/datasources/update_user_data_local_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/update_user_data_remote_data_source.dart';
+import 'package:movies/features/layout/profile/data/datasources/profile_local_data_source.dart';
+import 'package:movies/features/layout/profile/data/datasources/profile_remote_data_source.dart';
 import 'package:movies/features/layout/profile/data/repositories/profile_repo_impl.dart';
 import 'package:movies/features/layout/profile/domain/usecases/fetch_list_of_movies_in_history_use_case.dart';
 import 'package:movies/features/layout/profile/domain/usecases/fetch_list_of_movies_in_watch_list_use_case.dart';
@@ -66,22 +47,54 @@ import 'package:movies/features/layout/search/domain/usecases/search_movies_use_
 final getIt = GetIt.instance;
 
 void setup() {
-  getIt.registerSingleton<CreateNewUserUseCase>(
-    CreateNewUserUseCase(
-      authRepository: AuthRepositoryImpl(
-        authRemoteDataSource: AuthRemoteDataSourceImpl(
-            localStorage: HiveStorage(),
-            databaseServices: FirebaseFirestoreService(
-                firebaseFirestore: FirebaseFirestore.instance),
-            firebaseAuthServices:
-                FirebaseAuthServices(firebaseAuth: FirebaseAuth.instance),
-            firebaseFirestore: FirebaseFirestore.instance),
-        authLocalDataSource: AuthLocalDataSourceImpl(
+
+  getIt.registerSingleton<AuthRepositoryImpl>(
+    AuthRepositoryImpl(
+      authRemoteDataSource: AuthRemoteDataSourceImpl(
           localStorage: HiveStorage(),
-        ),
-      ),
+          firebaseAuthServices:
+              FirebaseAuthServices(firebaseAuth: FirebaseAuth.instance),
+          firebaseFirestore: FirebaseFirestore.instance,
+          databaseServices: FirebaseFirestoreService(
+              firebaseFirestore: FirebaseFirestore.instance)),
+      authLocalDataSource: AuthLocalDataSourceImpl(localStorage: HiveStorage()),
     ),
   );
+
+  
+  getIt.registerSingleton<CreateNewUserUseCase>(
+    CreateNewUserUseCase(
+      authRepository: getIt<AuthRepositoryImpl>(),
+    ),
+  );
+  
+
+  getIt.registerSingleton<HomeRepoImpl>(
+    HomeRepoImpl(
+    connectivityService: ConnectivityService(),
+    homeLocalDataSource: HomeLocalDataSourceImpl(localStorage: HiveStorage()),
+    homeRemoteDataSource: HomeRemoteDataSourceImpl(
+        localStorage: HiveStorage(),
+        apiService: ApiService(Dio()),
+        databaseServices: FirebaseFirestoreService(
+          firebaseFirestore: FirebaseFirestore.instance,
+        )),
+  ));
+
+  getIt.registerSingleton<ProfileRepoImpl>(
+    ProfileRepoImpl(
+    connectivityService: ConnectivityService(),
+    profileLocalDataSource:
+        ProfileLocalDataSourceImpl(localStorage: HiveStorage()),
+    profileRemoteDataSource: ProfileRemoteDataSourceImpl(
+        databaseServices: FirebaseFirestoreService(
+            firebaseFirestore: FirebaseFirestore.instance),
+        localStorage: HiveStorage(),
+        firebaseAuth: FirebaseAuth.instance,
+        googleSignIn: GoogleSignIn(),
+        facebookAuth: FacebookAuth.instance),
+  ));
+
   getIt.registerSingleton<SearchMoviesUseCase>(
     SearchMoviesUseCase(
       searchRepo: SearchRepoImpl(
@@ -108,693 +121,72 @@ void setup() {
 
   getIt.registerSingleton(
     FetchAvailableMoviesUseCase(
-      homeRepo: HomeRepoImpl(
-        connectivityService: ConnectivityService(),
-        fetchSimilarMoviesRemoteDataSource:
-            FetchSimilarMoviesRemoteDataSourceImpl(
-                apiService: ApiService(Dio())),
-        movieDetailsRemoteDataSource: FetchMovieDetailsRemoteDataSourceImpl(
-            apiService: ApiService(Dio())),
-        addMovieToHistoryLocalDataSource: AddMovieToHistoryLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        addMovieToHistoryRemoteDataSource:
-            AddMovieToHistoryRemoteDataSourceImpl(
-                localStorage: HiveStorage(),
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance)),
-        addMovieToWishListRemoteDataSource:
-            AddMovieToWishListRemoteDataSourceimpl(
-                localStorage: HiveStorage(),
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance)),
-        addMovieToWishListLocalDataSource:
-            AddMovieToWishListLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        watchNowMoviesLocalDataSource: WatchNowMoviesLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        wathchNowMoviesRemoteDataSource:
-            WathchNowMoviesRemoteDataSourceimpl(apiService: ApiService(Dio())),
-        availabeMoviesRemoteDataSource: AvailabeMoviesRemoteDataSourceImp(
-          apiService: ApiService(Dio()),
-        ),
-        availableMoviesLocalDataSource: AvailableMoviesLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-      ),
+      homeRepo: getIt<HomeRepoImpl>(),
     ),
   );
 
   getIt.registerSingleton(
     AddMovieToWishListUseCase(
-      homeRepo: HomeRepoImpl(
-        connectivityService: ConnectivityService(),
-        fetchSimilarMoviesRemoteDataSource:
-            FetchSimilarMoviesRemoteDataSourceImpl(
-                apiService: ApiService(Dio())),
-        movieDetailsRemoteDataSource: FetchMovieDetailsRemoteDataSourceImpl(
-            apiService: ApiService(Dio())),
-        addMovieToHistoryLocalDataSource: AddMovieToHistoryLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        addMovieToHistoryRemoteDataSource:
-            AddMovieToHistoryRemoteDataSourceImpl(
-                localStorage: HiveStorage(),
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance)),
-        addMovieToWishListRemoteDataSource:
-            AddMovieToWishListRemoteDataSourceimpl(
-                localStorage: HiveStorage(),
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance)),
-        addMovieToWishListLocalDataSource:
-            AddMovieToWishListLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        watchNowMoviesLocalDataSource: WatchNowMoviesLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        wathchNowMoviesRemoteDataSource:
-            WathchNowMoviesRemoteDataSourceimpl(apiService: ApiService(Dio())),
-        availabeMoviesRemoteDataSource: AvailabeMoviesRemoteDataSourceImp(
-          apiService: ApiService(Dio()),
-        ),
-        availableMoviesLocalDataSource: AvailableMoviesLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-      ),
+      homeRepo: getIt<HomeRepoImpl>(),
     ),
   );
   getIt.registerSingleton(
-    FetchNumberOfMoviesInHistoryUseCase(
-        profileRepo: ProfileRepoImpl(
-            logOutDataSource: LogOutRemoteDataSourceImpl(
-              localStorage: HiveStorage(),
-              firebaseAuth: FirebaseAuth.instance,
-              googleSignIn: GoogleSignIn(),
-              facebookAuth: FacebookAuth.instance,
-            ),
-            fetchListOfMoviesInWatchListLocalDataSource:
-                FetchListOfMoviesInWatchListLocalDataSourceImpl(
-                    localStorage: HiveStorage()),
-            fetchListOfMoviesInWatchListRemoteDataSource:
-                FetchListOfMoviesInWatchListRemoteDataSourceImpl(
-              localStorage: HiveStorage(),
-              databaseServices: FirebaseFirestoreService(
-                  firebaseFirestore: FirebaseFirestore.instance),
-            ),
-            fetchListOfMoviesInHistoryRemoteDataSource:
-                FetchListOfMoviesInHistoryRemoteDataSourceImpl(
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance),
-                    localStorage: HiveStorage()),
-            fetchListOfMoviesInHistoryLocalDataSource:
-                FetchListOfMoviesInHistoryLocalDataSourceImpl(
-              localStorage: HiveStorage(),
-            ),
-            updateUserDataRemoteDataSource: UpdateUserDataRemoteDataSourceImpl(
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance),
-                localStorage: HiveStorage()),
-            updateUserDataLocalDataSource:
-                UpdateUserDataLocalDataSourceImpl(localStorage: HiveStorage()),
-            userDataLocalDataSource:
-                UserDataLocalDataSourceImpl(localStorage: HiveStorage()),
-            fetchUserDataRemoteDataSource: FetchUserDataRemoteDataSourceImpl(
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance),
-                localStorage: HiveStorage()),
-            numberOfMoviesInWatchListLocalDataSource:
-                NumberOfMoviesInWatchListLocalDataSourceImpl(
-                    localStorage: HiveStorage()),
-            fetchNumberOfMoviesInWatchListRemoteDataSource:
-                FetchNumberOfMoviesInWatchListRemoteDataSourceImpl(
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance),
-                    localStorage: HiveStorage()),
-            connectivityService: ConnectivityService(),
-            fetchNumberOfMoviesInHistoryRemoteDataSource:
-                FetchNumberOfMoviesInHistoryRemoteDataSourceImpl(
-                    localStorage: HiveStorage(),
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance)),
-            numberOfMoviesInHistoryLocalDataSource:
-                NumberOfMoviesInHistoryLocalDataSourceImpl(
-                    localStorage: HiveStorage()))),
+    FetchNumberOfMoviesInHistoryUseCase(profileRepo: getIt<ProfileRepoImpl>()),
   );
   getIt.registerSingleton(
-    LogOutUseCase(
-        profileRepo: ProfileRepoImpl(
-            logOutDataSource: LogOutRemoteDataSourceImpl(
-              localStorage: HiveStorage(),
-              firebaseAuth: FirebaseAuth.instance,
-              googleSignIn: GoogleSignIn(),
-              facebookAuth: FacebookAuth.instance,
-            ),
-            fetchListOfMoviesInWatchListLocalDataSource:
-                FetchListOfMoviesInWatchListLocalDataSourceImpl(
-                    localStorage: HiveStorage()),
-            fetchListOfMoviesInWatchListRemoteDataSource:
-                FetchListOfMoviesInWatchListRemoteDataSourceImpl(
-              localStorage: HiveStorage(),
-              databaseServices: FirebaseFirestoreService(
-                  firebaseFirestore: FirebaseFirestore.instance),
-            ),
-            fetchListOfMoviesInHistoryRemoteDataSource:
-                FetchListOfMoviesInHistoryRemoteDataSourceImpl(
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance),
-                    localStorage: HiveStorage()),
-            fetchListOfMoviesInHistoryLocalDataSource:
-                FetchListOfMoviesInHistoryLocalDataSourceImpl(
-              localStorage: HiveStorage(),
-            ),
-            updateUserDataRemoteDataSource: UpdateUserDataRemoteDataSourceImpl(
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance),
-                localStorage: HiveStorage()),
-            updateUserDataLocalDataSource:
-                UpdateUserDataLocalDataSourceImpl(localStorage: HiveStorage()),
-            userDataLocalDataSource:
-                UserDataLocalDataSourceImpl(localStorage: HiveStorage()),
-            fetchUserDataRemoteDataSource: FetchUserDataRemoteDataSourceImpl(
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance),
-                localStorage: HiveStorage()),
-            numberOfMoviesInWatchListLocalDataSource:
-                NumberOfMoviesInWatchListLocalDataSourceImpl(
-                    localStorage: HiveStorage()),
-            fetchNumberOfMoviesInWatchListRemoteDataSource:
-                FetchNumberOfMoviesInWatchListRemoteDataSourceImpl(
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance),
-                    localStorage: HiveStorage()),
-            connectivityService: ConnectivityService(),
-            fetchNumberOfMoviesInHistoryRemoteDataSource:
-                FetchNumberOfMoviesInHistoryRemoteDataSourceImpl(
-                    localStorage: HiveStorage(),
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance)),
-            numberOfMoviesInHistoryLocalDataSource:
-                NumberOfMoviesInHistoryLocalDataSourceImpl(
-                    localStorage: HiveStorage()))),
+    LogOutUseCase(profileRepo: getIt<ProfileRepoImpl>()),
   );
   getIt.registerSingleton(
-    UpdateUserDataUseCase(
-        profileRepo: ProfileRepoImpl(
-            logOutDataSource: LogOutRemoteDataSourceImpl(
-              localStorage: HiveStorage(),
-              firebaseAuth: FirebaseAuth.instance,
-              googleSignIn: GoogleSignIn(),
-              facebookAuth: FacebookAuth.instance,
-            ),
-            fetchListOfMoviesInWatchListLocalDataSource:
-                FetchListOfMoviesInWatchListLocalDataSourceImpl(
-                    localStorage: HiveStorage()),
-            fetchListOfMoviesInWatchListRemoteDataSource:
-                FetchListOfMoviesInWatchListRemoteDataSourceImpl(
-              localStorage: HiveStorage(),
-              databaseServices: FirebaseFirestoreService(
-                  firebaseFirestore: FirebaseFirestore.instance),
-            ),
-            fetchListOfMoviesInHistoryRemoteDataSource:
-                FetchListOfMoviesInHistoryRemoteDataSourceImpl(
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance),
-                    localStorage: HiveStorage()),
-            fetchListOfMoviesInHistoryLocalDataSource:
-                FetchListOfMoviesInHistoryLocalDataSourceImpl(
-              localStorage: HiveStorage(),
-            ),
-            updateUserDataRemoteDataSource: UpdateUserDataRemoteDataSourceImpl(
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance),
-                localStorage: HiveStorage()),
-            updateUserDataLocalDataSource:
-                UpdateUserDataLocalDataSourceImpl(localStorage: HiveStorage()),
-            userDataLocalDataSource:
-                UserDataLocalDataSourceImpl(localStorage: HiveStorage()),
-            fetchUserDataRemoteDataSource: FetchUserDataRemoteDataSourceImpl(
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance),
-                localStorage: HiveStorage()),
-            numberOfMoviesInWatchListLocalDataSource:
-                NumberOfMoviesInWatchListLocalDataSourceImpl(
-                    localStorage: HiveStorage()),
-            fetchNumberOfMoviesInWatchListRemoteDataSource:
-                FetchNumberOfMoviesInWatchListRemoteDataSourceImpl(
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance),
-                    localStorage: HiveStorage()),
-            connectivityService: ConnectivityService(),
-            fetchNumberOfMoviesInHistoryRemoteDataSource:
-                FetchNumberOfMoviesInHistoryRemoteDataSourceImpl(
-                    localStorage: HiveStorage(),
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance)),
-            numberOfMoviesInHistoryLocalDataSource:
-                NumberOfMoviesInHistoryLocalDataSourceImpl(
-                    localStorage: HiveStorage()))),
+    UpdateUserDataUseCase(profileRepo: getIt<ProfileRepoImpl>()),
   );
   getIt.registerSingleton(
-    FetchListOfMoviesInWatchListUseCase(
-        profileRepo: ProfileRepoImpl(
-            logOutDataSource: LogOutRemoteDataSourceImpl(
-              localStorage: HiveStorage(),
-              firebaseAuth: FirebaseAuth.instance,
-              googleSignIn: GoogleSignIn(),
-              facebookAuth: FacebookAuth.instance,
-            ),
-            fetchListOfMoviesInWatchListLocalDataSource:
-                FetchListOfMoviesInWatchListLocalDataSourceImpl(
-                    localStorage: HiveStorage()),
-            fetchListOfMoviesInWatchListRemoteDataSource:
-                FetchListOfMoviesInWatchListRemoteDataSourceImpl(
-              localStorage: HiveStorage(),
-              databaseServices: FirebaseFirestoreService(
-                  firebaseFirestore: FirebaseFirestore.instance),
-            ),
-            fetchListOfMoviesInHistoryRemoteDataSource:
-                FetchListOfMoviesInHistoryRemoteDataSourceImpl(
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance),
-                    localStorage: HiveStorage()),
-            fetchListOfMoviesInHistoryLocalDataSource:
-                FetchListOfMoviesInHistoryLocalDataSourceImpl(
-              localStorage: HiveStorage(),
-            ),
-            updateUserDataRemoteDataSource: UpdateUserDataRemoteDataSourceImpl(
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance),
-                localStorage: HiveStorage()),
-            updateUserDataLocalDataSource:
-                UpdateUserDataLocalDataSourceImpl(localStorage: HiveStorage()),
-            userDataLocalDataSource:
-                UserDataLocalDataSourceImpl(localStorage: HiveStorage()),
-            fetchUserDataRemoteDataSource: FetchUserDataRemoteDataSourceImpl(
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance),
-                localStorage: HiveStorage()),
-            numberOfMoviesInWatchListLocalDataSource:
-                NumberOfMoviesInWatchListLocalDataSourceImpl(
-                    localStorage: HiveStorage()),
-            fetchNumberOfMoviesInWatchListRemoteDataSource:
-                FetchNumberOfMoviesInWatchListRemoteDataSourceImpl(
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance),
-                    localStorage: HiveStorage()),
-            connectivityService: ConnectivityService(),
-            fetchNumberOfMoviesInHistoryRemoteDataSource:
-                FetchNumberOfMoviesInHistoryRemoteDataSourceImpl(
-                    localStorage: HiveStorage(),
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance)),
-            numberOfMoviesInHistoryLocalDataSource:
-                NumberOfMoviesInHistoryLocalDataSourceImpl(
-                    localStorage: HiveStorage()))),
+    FetchListOfMoviesInWatchListUseCase(profileRepo: getIt<ProfileRepoImpl>()),
   );
 
   getIt.registerSingleton(
-    FetchListOfMoviesInHistoryUseCase(
-        profileRepo: ProfileRepoImpl(
-            logOutDataSource: LogOutRemoteDataSourceImpl(
-              localStorage: HiveStorage(),
-              firebaseAuth: FirebaseAuth.instance,
-              googleSignIn: GoogleSignIn(),
-              facebookAuth: FacebookAuth.instance,
-            ),
-            fetchListOfMoviesInWatchListLocalDataSource:
-                FetchListOfMoviesInWatchListLocalDataSourceImpl(
-                    localStorage: HiveStorage()),
-            fetchListOfMoviesInWatchListRemoteDataSource:
-                FetchListOfMoviesInWatchListRemoteDataSourceImpl(
-              localStorage: HiveStorage(),
-              databaseServices: FirebaseFirestoreService(
-                  firebaseFirestore: FirebaseFirestore.instance),
-            ),
-            fetchListOfMoviesInHistoryRemoteDataSource:
-                FetchListOfMoviesInHistoryRemoteDataSourceImpl(
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance),
-                    localStorage: HiveStorage()),
-            fetchListOfMoviesInHistoryLocalDataSource:
-                FetchListOfMoviesInHistoryLocalDataSourceImpl(
-              localStorage: HiveStorage(),
-            ),
-            updateUserDataRemoteDataSource: UpdateUserDataRemoteDataSourceImpl(
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance),
-                localStorage: HiveStorage()),
-            updateUserDataLocalDataSource:
-                UpdateUserDataLocalDataSourceImpl(localStorage: HiveStorage()),
-            userDataLocalDataSource:
-                UserDataLocalDataSourceImpl(localStorage: HiveStorage()),
-            fetchUserDataRemoteDataSource: FetchUserDataRemoteDataSourceImpl(
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance),
-                localStorage: HiveStorage()),
-            numberOfMoviesInWatchListLocalDataSource:
-                NumberOfMoviesInWatchListLocalDataSourceImpl(
-                    localStorage: HiveStorage()),
-            fetchNumberOfMoviesInWatchListRemoteDataSource:
-                FetchNumberOfMoviesInWatchListRemoteDataSourceImpl(
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance),
-                    localStorage: HiveStorage()),
-            connectivityService: ConnectivityService(),
-            fetchNumberOfMoviesInHistoryRemoteDataSource:
-                FetchNumberOfMoviesInHistoryRemoteDataSourceImpl(
-                    localStorage: HiveStorage(),
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance)),
-            numberOfMoviesInHistoryLocalDataSource:
-                NumberOfMoviesInHistoryLocalDataSourceImpl(
-                    localStorage: HiveStorage()))),
+    FetchListOfMoviesInHistoryUseCase(profileRepo: getIt<ProfileRepoImpl>()),
   );
   getIt.registerSingleton(
-    FetchNumberOfWatchListMoviesUseCase(
-        profileRepo: ProfileRepoImpl(
-            logOutDataSource: LogOutRemoteDataSourceImpl(
-              localStorage: HiveStorage(),
-              firebaseAuth: FirebaseAuth.instance,
-              googleSignIn: GoogleSignIn(),
-              facebookAuth: FacebookAuth.instance,
-            ),
-            fetchListOfMoviesInWatchListLocalDataSource:
-                FetchListOfMoviesInWatchListLocalDataSourceImpl(
-                    localStorage: HiveStorage()),
-            fetchListOfMoviesInWatchListRemoteDataSource:
-                FetchListOfMoviesInWatchListRemoteDataSourceImpl(
-              localStorage: HiveStorage(),
-              databaseServices: FirebaseFirestoreService(
-                  firebaseFirestore: FirebaseFirestore.instance),
-            ),
-            fetchListOfMoviesInHistoryRemoteDataSource:
-                FetchListOfMoviesInHistoryRemoteDataSourceImpl(
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance),
-                    localStorage: HiveStorage()),
-            fetchListOfMoviesInHistoryLocalDataSource:
-                FetchListOfMoviesInHistoryLocalDataSourceImpl(
-              localStorage: HiveStorage(),
-            ),
-            updateUserDataRemoteDataSource: UpdateUserDataRemoteDataSourceImpl(
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance),
-                localStorage: HiveStorage()),
-            updateUserDataLocalDataSource:
-                UpdateUserDataLocalDataSourceImpl(localStorage: HiveStorage()),
-            userDataLocalDataSource:
-                UserDataLocalDataSourceImpl(localStorage: HiveStorage()),
-            fetchUserDataRemoteDataSource: FetchUserDataRemoteDataSourceImpl(
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance),
-                localStorage: HiveStorage()),
-            numberOfMoviesInWatchListLocalDataSource:
-                NumberOfMoviesInWatchListLocalDataSourceImpl(
-                    localStorage: HiveStorage()),
-            fetchNumberOfMoviesInWatchListRemoteDataSource:
-                FetchNumberOfMoviesInWatchListRemoteDataSourceImpl(
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance),
-                    localStorage: HiveStorage()),
-            connectivityService: ConnectivityService(),
-            fetchNumberOfMoviesInHistoryRemoteDataSource:
-                FetchNumberOfMoviesInHistoryRemoteDataSourceImpl(
-                    localStorage: HiveStorage(),
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance)),
-            numberOfMoviesInHistoryLocalDataSource:
-                NumberOfMoviesInHistoryLocalDataSourceImpl(
-                    localStorage: HiveStorage()))),
+    FetchNumberOfWatchListMoviesUseCase(profileRepo: getIt<ProfileRepoImpl>()),
   );
   getIt.registerSingleton(
-    FetchUserDataUseCase(
-        profileRepo: ProfileRepoImpl(
-            logOutDataSource: LogOutRemoteDataSourceImpl(
-              localStorage: HiveStorage(),
-              firebaseAuth: FirebaseAuth.instance,
-              googleSignIn: GoogleSignIn(),
-              facebookAuth: FacebookAuth.instance,
-            ),
-            fetchListOfMoviesInWatchListLocalDataSource:
-                FetchListOfMoviesInWatchListLocalDataSourceImpl(
-                    localStorage: HiveStorage()),
-            fetchListOfMoviesInWatchListRemoteDataSource:
-                FetchListOfMoviesInWatchListRemoteDataSourceImpl(
-              localStorage: HiveStorage(),
-              databaseServices: FirebaseFirestoreService(
-                  firebaseFirestore: FirebaseFirestore.instance),
-            ),
-            fetchListOfMoviesInHistoryRemoteDataSource:
-                FetchListOfMoviesInHistoryRemoteDataSourceImpl(
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance),
-                    localStorage: HiveStorage()),
-            fetchListOfMoviesInHistoryLocalDataSource:
-                FetchListOfMoviesInHistoryLocalDataSourceImpl(
-              localStorage: HiveStorage(),
-            ),
-            updateUserDataRemoteDataSource: UpdateUserDataRemoteDataSourceImpl(
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance),
-                localStorage: HiveStorage()),
-            updateUserDataLocalDataSource:
-                UpdateUserDataLocalDataSourceImpl(localStorage: HiveStorage()),
-            userDataLocalDataSource:
-                UserDataLocalDataSourceImpl(localStorage: HiveStorage()),
-            fetchUserDataRemoteDataSource: FetchUserDataRemoteDataSourceImpl(
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance),
-                localStorage: HiveStorage()),
-            numberOfMoviesInWatchListLocalDataSource:
-                NumberOfMoviesInWatchListLocalDataSourceImpl(
-                    localStorage: HiveStorage()),
-            fetchNumberOfMoviesInWatchListRemoteDataSource:
-                FetchNumberOfMoviesInWatchListRemoteDataSourceImpl(
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance),
-                    localStorage: HiveStorage()),
-            connectivityService: ConnectivityService(),
-            fetchNumberOfMoviesInHistoryRemoteDataSource:
-                FetchNumberOfMoviesInHistoryRemoteDataSourceImpl(
-                    localStorage: HiveStorage(),
-                    databaseServices: FirebaseFirestoreService(
-                        firebaseFirestore: FirebaseFirestore.instance)),
-            numberOfMoviesInHistoryLocalDataSource:
-                NumberOfMoviesInHistoryLocalDataSourceImpl(
-                    localStorage: HiveStorage()))),
+    FetchUserDataUseCase(profileRepo: getIt<ProfileRepoImpl>()),
   );
   getIt.registerSingleton(
     FetchMovieDetailsUseCase(
-      homeRepo: HomeRepoImpl(
-        connectivityService: ConnectivityService(),
-        fetchSimilarMoviesRemoteDataSource:
-            FetchSimilarMoviesRemoteDataSourceImpl(
-                apiService: ApiService(Dio())),
-        movieDetailsRemoteDataSource: FetchMovieDetailsRemoteDataSourceImpl(
-            apiService: ApiService(Dio())),
-        addMovieToHistoryLocalDataSource: AddMovieToHistoryLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        addMovieToHistoryRemoteDataSource:
-            AddMovieToHistoryRemoteDataSourceImpl(
-                localStorage: HiveStorage(),
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance)),
-        addMovieToWishListRemoteDataSource:
-            AddMovieToWishListRemoteDataSourceimpl(
-                localStorage: HiveStorage(),
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance)),
-        addMovieToWishListLocalDataSource:
-            AddMovieToWishListLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        watchNowMoviesLocalDataSource: WatchNowMoviesLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        wathchNowMoviesRemoteDataSource:
-            WathchNowMoviesRemoteDataSourceimpl(apiService: ApiService(Dio())),
-        availabeMoviesRemoteDataSource: AvailabeMoviesRemoteDataSourceImp(
-          apiService: ApiService(Dio()),
-        ),
-        availableMoviesLocalDataSource: AvailableMoviesLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-      ),
+      homeRepo: getIt<HomeRepoImpl>(),
     ),
   );
   getIt.registerSingleton(
     AddMovieToHistoryUseCase(
-      homeRepo: HomeRepoImpl(
-        connectivityService: ConnectivityService(),
-        fetchSimilarMoviesRemoteDataSource:
-            FetchSimilarMoviesRemoteDataSourceImpl(
-                apiService: ApiService(Dio())),
-        movieDetailsRemoteDataSource: FetchMovieDetailsRemoteDataSourceImpl(
-            apiService: ApiService(Dio())),
-        addMovieToHistoryLocalDataSource: AddMovieToHistoryLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        addMovieToHistoryRemoteDataSource:
-            AddMovieToHistoryRemoteDataSourceImpl(
-                localStorage: HiveStorage(),
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance)),
-        addMovieToWishListRemoteDataSource:
-            AddMovieToWishListRemoteDataSourceimpl(
-                localStorage: HiveStorage(),
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance)),
-        addMovieToWishListLocalDataSource:
-            AddMovieToWishListLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        watchNowMoviesLocalDataSource: WatchNowMoviesLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        wathchNowMoviesRemoteDataSource:
-            WathchNowMoviesRemoteDataSourceimpl(apiService: ApiService(Dio())),
-        availabeMoviesRemoteDataSource: AvailabeMoviesRemoteDataSourceImp(
-          apiService: ApiService(Dio()),
-        ),
-        availableMoviesLocalDataSource: AvailableMoviesLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-      ),
+      homeRepo: getIt<HomeRepoImpl>(),
     ),
   );
   getIt.registerSingleton(
     FetchWatchNowMoviesUseCase(
-      homeRepo: HomeRepoImpl(
-        connectivityService: ConnectivityService(),
-        fetchSimilarMoviesRemoteDataSource:
-            FetchSimilarMoviesRemoteDataSourceImpl(
-                apiService: ApiService(Dio())),
-        movieDetailsRemoteDataSource: FetchMovieDetailsRemoteDataSourceImpl(
-            apiService: ApiService(Dio())),
-        addMovieToHistoryLocalDataSource: AddMovieToHistoryLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        addMovieToHistoryRemoteDataSource:
-            AddMovieToHistoryRemoteDataSourceImpl(
-                localStorage: HiveStorage(),
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance)),
-        addMovieToWishListRemoteDataSource:
-            AddMovieToWishListRemoteDataSourceimpl(
-                localStorage: HiveStorage(),
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance)),
-        addMovieToWishListLocalDataSource:
-            AddMovieToWishListLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        watchNowMoviesLocalDataSource: WatchNowMoviesLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        wathchNowMoviesRemoteDataSource:
-            WathchNowMoviesRemoteDataSourceimpl(apiService: ApiService(Dio())),
-        availabeMoviesRemoteDataSource: AvailabeMoviesRemoteDataSourceImp(
-          apiService: ApiService(Dio()),
-        ),
-        availableMoviesLocalDataSource: AvailableMoviesLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-      ),
+      homeRepo: getIt<HomeRepoImpl>(),
     ),
   );
   getIt.registerSingleton(
     FetchSimilarMoviesUseCase(
-      homeRepo: HomeRepoImpl(
-        connectivityService: ConnectivityService(),
-        fetchSimilarMoviesRemoteDataSource:
-            FetchSimilarMoviesRemoteDataSourceImpl(
-                apiService: ApiService(Dio())),
-        movieDetailsRemoteDataSource: FetchMovieDetailsRemoteDataSourceImpl(
-            apiService: ApiService(Dio())),
-        addMovieToHistoryLocalDataSource: AddMovieToHistoryLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        addMovieToHistoryRemoteDataSource:
-            AddMovieToHistoryRemoteDataSourceImpl(
-                localStorage: HiveStorage(),
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance)),
-        addMovieToWishListRemoteDataSource:
-            AddMovieToWishListRemoteDataSourceimpl(
-                localStorage: HiveStorage(),
-                databaseServices: FirebaseFirestoreService(
-                    firebaseFirestore: FirebaseFirestore.instance)),
-        addMovieToWishListLocalDataSource:
-            AddMovieToWishListLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        watchNowMoviesLocalDataSource: WatchNowMoviesLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-        wathchNowMoviesRemoteDataSource:
-            WathchNowMoviesRemoteDataSourceimpl(apiService: ApiService(Dio())),
-        availabeMoviesRemoteDataSource: AvailabeMoviesRemoteDataSourceImp(
-          apiService: ApiService(Dio()),
-        ),
-        availableMoviesLocalDataSource: AvailableMoviesLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-      ),
+      homeRepo: getIt<HomeRepoImpl>(),
     ),
   );
 
   getIt.registerSingleton(
     SignInUserUseCase(
-      authRepository: AuthRepositoryImpl(
-        authRemoteDataSource: AuthRemoteDataSourceImpl(
-            localStorage: HiveStorage(),
-            databaseServices: FirebaseFirestoreService(
-                firebaseFirestore: FirebaseFirestore.instance),
-            firebaseAuthServices:
-                FirebaseAuthServices(firebaseAuth: FirebaseAuth.instance),
-            firebaseFirestore: FirebaseFirestore.instance),
-        authLocalDataSource: AuthLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-      ),
+      authRepository: getIt<AuthRepositoryImpl>(),
     ),
   );
 
   getIt.registerSingleton(
     SignInWithGoogleUseCase(
-      authRepository: AuthRepositoryImpl(
-        authRemoteDataSource: AuthRemoteDataSourceImpl(
-            localStorage: HiveStorage(),
-            databaseServices: FirebaseFirestoreService(
-                firebaseFirestore: FirebaseFirestore.instance),
-            firebaseAuthServices:
-                FirebaseAuthServices(firebaseAuth: FirebaseAuth.instance),
-            firebaseFirestore: FirebaseFirestore.instance),
-        authLocalDataSource: AuthLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-      ),
+      authRepository: getIt<AuthRepositoryImpl>(),
     ),
   );
   getIt.registerSingleton(
     SignInWithFacebookUseCase(
-      authRepository: AuthRepositoryImpl(
-        authRemoteDataSource: AuthRemoteDataSourceImpl(
-            localStorage: HiveStorage(),
-            databaseServices: FirebaseFirestoreService(
-                firebaseFirestore: FirebaseFirestore.instance),
-            firebaseAuthServices:
-                FirebaseAuthServices(firebaseAuth: FirebaseAuth.instance),
-            firebaseFirestore: FirebaseFirestore.instance),
-        authLocalDataSource: AuthLocalDataSourceImpl(
-          localStorage: HiveStorage(),
-        ),
-      ),
+      authRepository: getIt<AuthRepositoryImpl>(),
     ),
   );
 }

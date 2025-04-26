@@ -5,61 +5,22 @@ import 'package:movies/core/services/failure.dart';
 import 'package:movies/core/services/network_checker.dart';
 import 'package:movies/features/layout/home/data/models/movie_model.dart';
 import 'package:movies/features/layout/home/domain/entities/movie_entity.dart';
-import 'package:movies/features/layout/profile/data/datasources/fetch_list_of_movies_in_history.dart';
-import 'package:movies/features/layout/profile/data/datasources/fetch_list_of_movies_in_history_local_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/fetch_list_of_movies_in_watch_list_local_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/fetch_list_of_movies_in_watch_list_remote_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/fetch_number_of_movies_in_history_remote_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/fetch_number_of_movies_in_watch_list_remote_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/fetch_user_data_local_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/fetch_user_data_remote_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/log_out_remote_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/number_of_movies_in_history_local_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/number_of_movies_of_watch_list.dart';
-import 'package:movies/features/layout/profile/data/datasources/update_user_data_local_data_source.dart';
-import 'package:movies/features/layout/profile/data/datasources/update_user_data_remote_data_source.dart';
+import 'package:movies/features/layout/profile/data/datasources/profile_local_data_source.dart';
+import 'package:movies/features/layout/profile/data/datasources/profile_remote_data_source.dart';
 import 'package:movies/features/layout/profile/data/models/user_profile_model.dart';
 import 'package:movies/features/layout/profile/domain/entities/user_profile_entity.dart';
 import 'package:movies/features/layout/profile/domain/repositories/profile_repo.dart';
 
 class ProfileRepoImpl implements ProfileRepo {
-  LogOutDataSource logOutDataSource;
-  UpdateUserDataLocalDataSource updateUserDataLocalDataSource;
-  UpdateUserDataRemoteDataSource updateUserDataRemoteDataSource;
-  FetchNumberOfMoviesInHistoryRemoteDataSource
-      fetchNumberOfMoviesInHistoryRemoteDataSource;
-  NumberOfMoviesInHistoryLocalDataSource numberOfMoviesInHistoryLocalDataSource;
-  FetchNumberOfMoviesInWatchListRemoteDataSource
-      fetchNumberOfMoviesInWatchListRemoteDataSource;
-  NumberOfMoviesInWatchListLocalDataSource
-      numberOfMoviesInWatchListLocalDataSource;
-  ConnectivityService connectivityService;
-  FetchUserDataRemoteDataSource fetchUserDataRemoteDataSource;
-  UserDataLocalDataSource userDataLocalDataSource;
-  FetchListOfMoviesInHistoryRemoteDataSource
-      fetchListOfMoviesInHistoryRemoteDataSource;
-  FetchListOfMoviesInHistoryLocalDataSource
-      fetchListOfMoviesInHistoryLocalDataSource;
-  FetchListOfMoviesInWatchListRemoteDataSource
-      fetchListOfMoviesInWatchListRemoteDataSource;
-  FetchListOfMoviesInWatchListLocalDataSource
-      fetchListOfMoviesInWatchListLocalDataSource;
+
+ConnectivityService connectivityService;
+ProfileLocalDataSource  profileLocalDataSource;
+  ProfileRemoteDataSource profileRemoteDataSource;
 
   ProfileRepoImpl({
-    required this.logOutDataSource,
-    required this.fetchListOfMoviesInWatchListRemoteDataSource,
-    required this.fetchListOfMoviesInWatchListLocalDataSource,
-    required this.fetchListOfMoviesInHistoryRemoteDataSource,
-    required this.fetchListOfMoviesInHistoryLocalDataSource,
-    required this.updateUserDataLocalDataSource,
-    required this.updateUserDataRemoteDataSource,
-    required this.fetchUserDataRemoteDataSource,
-    required this.userDataLocalDataSource,
-    required this.numberOfMoviesInWatchListLocalDataSource,
-    required this.fetchNumberOfMoviesInWatchListRemoteDataSource,
+  required this.profileRemoteDataSource,
+    required this.profileLocalDataSource,
     required this.connectivityService,
-    required this.fetchNumberOfMoviesInHistoryRemoteDataSource,
-    required this.numberOfMoviesInHistoryLocalDataSource,
   });
 
   @override
@@ -69,13 +30,13 @@ class ProfileRepoImpl implements ProfileRepo {
           await connectivityService.hasInternetConnection();
 
       if (hasInternetConnection) {
-        int numberOfMovies = await fetchNumberOfMoviesInHistoryRemoteDataSource
+        int numberOfMovies = await profileRemoteDataSource
             .fetchNumberOfMoviesInHistory();
-        numberOfMoviesInHistoryLocalDataSource.storeNumberOfMoviesInHistory(
+        profileLocalDataSource.storeNumberOfMoviesInHistory(
             numberOfMovies: numberOfMovies);
         return Right(numberOfMovies);
       } else {
-        return Right(numberOfMoviesInHistoryLocalDataSource
+        return Right(profileLocalDataSource
             .fetchNumberOfMoviesInHistory());
       }
     } on CacheException catch (e) {
@@ -95,13 +56,13 @@ class ProfileRepoImpl implements ProfileRepo {
 
       if (hasInternetConnection) {
         int numberOfMovies =
-            await fetchNumberOfMoviesInWatchListRemoteDataSource
+            await profileRemoteDataSource
                 .fetchNumberOfMoviesInWatchList();
-        numberOfMoviesInWatchListLocalDataSource.storeNumberOfMoviesInWatchList(
+        profileLocalDataSource.storeNumberOfMoviesInWatchList(
             numberOfMovies: numberOfMovies);
         return Right(numberOfMovies);
       } else {
-        return Right(numberOfMoviesInWatchListLocalDataSource
+        return Right(profileLocalDataSource
             .fetchNumberOfMoviesInWatchList());
       }
     } on CacheException catch (e) {
@@ -121,13 +82,13 @@ class ProfileRepoImpl implements ProfileRepo {
 
       if (hasInternetConnection) {
         UserProfileModel userProfile =
-            await fetchUserDataRemoteDataSource.fetchUserData();
+            await profileRemoteDataSource.fetchUserData();
 
-        userDataLocalDataSource.storeUserData(user: userProfile);
+        profileLocalDataSource.storeUserData(user: userProfile);
 
         return Right(userProfile);
       } else {
-        return Right(userDataLocalDataSource.fetchUserData());
+        return Right(profileLocalDataSource.fetchUserData());
       }
     } on CacheException catch (e) {
       return Left(CacheFailure(errMessage: e.errMessage));
@@ -142,12 +103,12 @@ class ProfileRepoImpl implements ProfileRepo {
   Future<Either<Failure, void>> updateUserData(
       {String? userName, String? userPhone}) async {
     try {
-      await updateUserDataRemoteDataSource.updateUserData(
+      await profileRemoteDataSource.updateUserData(
         userName: userName,
         userPhone: userPhone,
       );
 
-      updateUserDataLocalDataSource.updateUserData(
+      profileLocalDataSource.updateUserData(
         userName: userName,
         userPhone: userPhone,
       );
@@ -170,14 +131,14 @@ class ProfileRepoImpl implements ProfileRepo {
           await connectivityService.hasInternetConnection();
       if (hasInternetConnection) {
         List<MovieModel> movies =
-            await fetchListOfMoviesInHistoryRemoteDataSource
+            await profileRemoteDataSource
                 .fetchListOfMoviesInHistory();
-        fetchListOfMoviesInHistoryLocalDataSource.storeListOfMoviesInHistory(
+        profileLocalDataSource.storeListOfMoviesInHistory(
             movies: movies);
         return Right(movies);
       } else {
         List<MovieModel> movies =
-            await fetchListOfMoviesInHistoryLocalDataSource
+            await profileLocalDataSource
                 .fetchListOfMoviesInHistory();
         return Right(movies);
       }
@@ -198,11 +159,11 @@ class ProfileRepoImpl implements ProfileRepo {
           await connectivityService.hasInternetConnection();
       if (hasInternetConnection) {
         List<MovieModel> movies =
-            await fetchListOfMoviesInWatchListRemoteDataSource
+            await profileRemoteDataSource
                 .fetchListOfMoviesInWatchList();
         return Right(movies);
       } else {
-        List<MovieEntity> movies = fetchListOfMoviesInWatchListLocalDataSource
+        List<MovieEntity> movies = profileLocalDataSource
             .fetchListOfMoviesInWatchList();
         return Right(movies);
       }
@@ -222,7 +183,7 @@ class ProfileRepoImpl implements ProfileRepo {
           await connectivityService.hasInternetConnection();
 
       if (hasInternetConnection) {
-        return Right(await logOutDataSource.logOut());
+        return Right(await profileRemoteDataSource.logOut());
       } else {
         return Left(Failure(errMessage: 'No internet connection'));
       }
